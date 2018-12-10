@@ -7,7 +7,7 @@ public class Board {
     /** Board data srtucture */
     private Latticing<Piece> latticeBoard;
     /** Array of Players */
-    private Color[] players;
+    private Color[] players;//TODO: Combine this players with server
     /** Board radius */
     private int radius;
     /** Win Locations */
@@ -118,6 +118,7 @@ public class Board {
 
     public boolean move(HexCell<Piece> src, HexCell<Piece> dst) {
         if(!isValidMove(src, dst)) return false;
+
         latticeBoard.flipNodes(src, dst);
         return true;
     }

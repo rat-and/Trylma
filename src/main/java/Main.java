@@ -8,26 +8,34 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 import java.util.Random;
 
 import static com.sun.javafx.scene.control.skin.Utils.getResource;
-
+/**
+ * Client
+ *
+ *  PROTOCOL:
+ *  Client -> Server           Server -> Client
+ *  ----------------           ----------------
+ *  MOVE <src> <dst> (x,y,z)   WELCOME PLAYER<int>  (player number)
+ *  EXIT                       PLAYER_MOVED: <src> <dst> (x,y,z)
+ *                             MESSAGE <text>
+ *
+ * A second change is that it allows an unlimited number of pairs of
+ * players to play.
+ */
 public class Main extends Application {
-
-    public static final int SCREEN_SIZE = 700;
-    public static final int BOARD_RADIUS = 5;
-    public static final int HEX_DIAMETER = (SCREEN_SIZE*2/3)/(BOARD_RADIUS + 2*(BOARD_RADIUS-1));
-    public static final int PIECE_DIAMETER = HEX_DIAMETER*4/5;
-    public static final double Y_OFFSET = ((double) HEX_DIAMETER/2)*(2-Math.sqrt(3));
-    public static final double VISUAL_OFFSET = ((double) HEX_DIAMETER/2) * Math.sqrt(2)/9;
-
-    public static final boolean MOVE_ASSISTANCE = true;
-    public static final int NUM_HUMAN_PLAYERS = 1;
-    public static final Color[] PLAYERS = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.GRAY};
-    public static final String[] PLAYER_NAMES = {"Red", "Blue", "Green", "Yellow", "Pink", "Gray"};
 
     private Board board;
     private Area area;
+    private Client client;
 
     public static void main(String[] args) {
         launch(args);
@@ -42,6 +50,7 @@ public class Main extends Application {
     public Main() {
         initScreen();
         initBoard();
+        initConnection();
     }
 
      public void newGame() {
@@ -49,32 +58,43 @@ public class Main extends Application {
     }
 
     private void initBoard() {
-        board = new Board(BOARD_RADIUS, PLAYERS);
+        board = new Board(GameSettings.BOARD_RADIUS,GameSettings. PLAYERS);
     }
 
     private void initScreen() {
         area = new Area(this);
     }
 
+    private void initConnection() {
+        client = new Client(this);
+    }
+
     public Board getBoard() {
         return board;
+    }
+
+    public Client getClient (){
+        return client;
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 //        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
+
+        //client.connectToServer(); TODO: uncomment in future
+
         Group root = new Group();
         primaryStage.setTitle("Trylma");
 
         root.getChildren().add(area);
 
-        Canvas mainCanvas = new Canvas(SCREEN_SIZE - 5, SCREEN_SIZE - 5);
+        Canvas mainCanvas = new Canvas(GameSettings.SCREEN_SIZE - 5, GameSettings.SCREEN_SIZE - 5);
         GraphicsContext graphicsContext = mainCanvas.getGraphicsContext2D();
         root.getChildren().add(mainCanvas);
 
         area.paintComponent(graphicsContext);
 
-        Scene scene = new Scene(root, SCREEN_SIZE, SCREEN_SIZE);
+        Scene scene = new Scene(root, GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
 
         primaryStage.setScene(scene);
         primaryStage.show();

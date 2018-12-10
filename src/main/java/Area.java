@@ -8,14 +8,16 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+ *  To ma rysować tylko
+ * */
 public class Area extends Pane {
 //    private static final Color TRANSPARENT_GRAY = new Color(128, 128, 128, 100);
     private static final long SERIAL_VERSION = 1L;
-    private Main mainStage;
-    private ArrayList<Point<HexCell<Piece>>> possibleMoves;
-    private int currentPlayerIndex;
-    private int winPlayerIndex;
+    private Main mainStage; //TODO: Move to server
+    private ArrayList<Point<HexCell<Piece>>> possibleMoves; //TODO: Move to server
+    private int currentPlayerIndex; //TODO: Move to server
+    private int winPlayerIndex; //TODO: Move to server
     private HitTestAdapter htAdaper;
 
     public Area(Main mainStage) {
@@ -30,61 +32,61 @@ public class Area extends Pane {
     public void draw(GraphicsContext graphicsContext) {
         /** Draws Win Message */
         if (winPlayerIndex >= 0) {
-            graphicsContext.strokeText("The " + Main.PLAYER_NAMES[winPlayerIndex] + " player won!", Main.SCREEN_SIZE / 20, Main.SCREEN_SIZE / 20);
+            graphicsContext.strokeText("The " + GameSettings.PLAYER_NAMES[winPlayerIndex] + " player won!", GameSettings.SCREEN_SIZE / 20, GameSettings.SCREEN_SIZE / 20);
 
             for (Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
 
                 /**draw if there's place*/
                 if (p.getKey().getKey() != null) {
-                    if (p.getKey().getKey().getPlayer().equals(Main.PLAYERS[winPlayerIndex])) {
+                    if (p.getKey().getKey().getPlayer().equals(GameSettings.PLAYERS[winPlayerIndex])) {
                         graphicsContext.setFill(p.getKey().getKey().getColor().brighter());
 
                     } else {
                         graphicsContext.setFill(p.getKey().getKey().getColor());
                     }
                     //tutaj chyba zle
-                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*Main.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
                     graphicsContext.setFill(Color.BLACK);
 //                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
                 }
                 /** draws move-assistant */
-                else if (Main.MOVE_ASSISTANCE && this.isPossibleMove(p)) {
+                else if (GameSettings.MOVE_ASSISTANCE && this.isPossibleMove(p)) {
                     graphicsContext.setFill(Color.gray(0.5, 0.5));
-                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*Main.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
 //                    graphicsContext.setFill(Color.BLACK);
 //                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
                 }
                 /** if there*s no piece */
                 else {
                     graphicsContext.setFill(Color.BLACK);
-                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*Main.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
                 }
 
             }
         }
         /** no-win sequence */
         else {
-           graphicsContext.strokeText("It's the " + Main.PLAYER_NAMES[currentPlayerIndex] + " player's turn", Main.SCREEN_SIZE / 20, Main.SCREEN_SIZE / 20);
+           graphicsContext.strokeText("It's the " + GameSettings.PLAYER_NAMES[currentPlayerIndex] + " player's turn", GameSettings.SCREEN_SIZE / 20, GameSettings.SCREEN_SIZE / 20);
             for (Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
 
                 /** draw if there's place */
                 if (p.getKey().getKey() != null) {
                     graphicsContext.setFill(p.getKey().getKey().getColor());
-                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*Main.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
 //                    graphicsContext.setFill(Color.BLACK);
 //                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
                 }
                 /** move assistant mechanism */
-                else if (Main.MOVE_ASSISTANCE && isPossibleMove(p)) {
+                else if (GameSettings.MOVE_ASSISTANCE && isPossibleMove(p)) {
                     graphicsContext.setFill(Color.gray(0.5, 0.5));
-                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*Main.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
 //                    graphicsContext.setFill(Color.BLACK);
 //                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
                 }
                 /** if no piece and it's not possilbe move */
                 else {
                     graphicsContext.setFill(Color.BLACK);
-                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*Main.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+                    graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
                 }
             }
         }
@@ -102,8 +104,7 @@ public class Area extends Pane {
         draw(graphicsContext);
     }
 
-
-
+    //TODO: What with this? // Should be ok
     private void updatePossibleMoves(HexCell<Piece> src) {
         possibleMoves.clear();
         if (src == null || src.getKey() == null) {
@@ -116,11 +117,12 @@ public class Area extends Pane {
         }
     }
 
-
+    // DO hexcella jest wstawiony Piece
     private boolean isPlayer(Point<HexCell<Piece>> p) {
         if(p == null || p.getKey().getKey() == null) return false;
-        return (p.getKey().getKey().getPlayer().equals(Main.PLAYERS[currentPlayerIndex]));
+        return (p.getKey().getKey().getPlayer().equals(GameSettings.PLAYERS[currentPlayerIndex]));
     }
+
 
     private void unhighlight() {
         for(Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
@@ -128,9 +130,9 @@ public class Area extends Pane {
             possibleMoves.clear();
         }
     }
-
+    // ?
     private void nextPlayer() {
-        if(currentPlayerIndex == Main.PLAYERS.length - 1)
+        if(currentPlayerIndex == GameSettings.PLAYERS.length - 1)
             currentPlayerIndex = 0;
         else
             currentPlayerIndex++;
@@ -142,7 +144,7 @@ public class Area extends Pane {
 
         Point<HexCell<Piece>> bestPiece = null;
         Point<HexCell<Piece>> bestMove = null;
-        double bestScore = Math.pow(Main.BOARD_RADIUS - 1, 4);
+        double bestScore = Math.pow(GameSettings.BOARD_RADIUS - 1, 4);
 
         /** For each of the current player's pieces... */
         for(Point<HexCell<Piece>> p : mainStage.getBoard().getPlayerPoints(currentPlayerIndex)) {
@@ -172,9 +174,9 @@ public class Area extends Pane {
         ArrayList<HexCell<Piece>> winLocs = mainStage.getBoard().getWinLocs(currentPlayerIndex);
         HexCell<Piece> cornerPiece = null;
         for(HexCell<Piece> n : winLocs) {
-            if(Math.abs(n.getX()) >= (Main.BOARD_RADIUS-1)*2 ||
-                    Math.abs(n.getY()) >= (Main.BOARD_RADIUS-1)*2 ||
-                    Math.abs(n.getZ()) >= (Main.BOARD_RADIUS-1)*2) {
+            if(Math.abs(n.getX()) >= (GameSettings.BOARD_RADIUS-1)*2 ||
+                    Math.abs(n.getY()) >= (GameSettings.BOARD_RADIUS-1)*2 ||
+                    Math.abs(n.getZ()) >= (GameSettings.BOARD_RADIUS-1)*2) {
                 cornerPiece = n;
             }
         }
@@ -231,7 +233,7 @@ public class Area extends Pane {
                 /**reset possible moves */
                 updatePossibleMoves(null);
                 /** For all positions on the board*/
-                for (Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
+                for (Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {//TODO: Should this be here?
                     /** If there is a piece at this position and it's the player's piece ... */
                     if(p.getKey().getKey() != null && isPlayer(p)) {
                         /** Highlight it if the user clicked on it */
@@ -253,13 +255,15 @@ public class Area extends Pane {
                     } else {
                         /** Move the toMove piece here if possible and reset move-assistance */
                         if(toMove != null && p.getEllipse().contains(event.getX(), event.getY())) {
-                            if(mainStage.getBoard().move(toMove, p.getKey())) {
+                            if(mainStage.getBoard().isValidMove(toMove, p.getKey())) {//TODO: this is crucial
+                                mainStage.getBoard().move(toMove, p.getKey());
+                                mainStage.getClient().moveCommand(toMove.toString() + " " + p.getKey().toString());
                                 /** Test for winner and run win sequence */
-                                if(mainStage.getBoard().won() >= 0)
+                                if(mainStage.getBoard().won() >= 0)//TODO: Win condition
                                     runWinSequence(mainStage.getBoard().won());
                                 /** Move to next player and run Computer Player */
-                                nextPlayer();
-                                while(currentPlayerIndex >= Main.NUM_HUMAN_PLAYERS) {
+                                nextPlayer();//TODO: nextPLayer
+                                while(currentPlayerIndex >= GameSettings.NUM_HUMAN_PLAYERS) {
                                     runComputerPlayer();
                                     if(mainStage.getBoard().won() >= 0) {
                                         runWinSequence(mainStage.getBoard().won());
@@ -275,6 +279,7 @@ public class Area extends Pane {
             }
         };
 
+        //TODO: This shouldn`t be here
         @Override
         public void run() {
             while(isRunning) {
@@ -290,7 +295,7 @@ public class Area extends Pane {
                     }
 
                     winPlayerIndex = -1;
-                    mainStage.newGame();
+                    mainStage.newGame();//wtf
                 }
 
                 /** Repaint */
