@@ -31,9 +31,9 @@ public class Point<K> {
     }
 
     public Ellipse getEllipse() {
-        return new Ellipse(px * Main.HEX_DIAMETER + Main.SCREEN_SIZE / 2,
-                py * (Main.HEX_DIAMETER - (Main.Y_OFFSET - Main.VISUAL_OFFSET)) + Main.SCREEN_SIZE / 2,
-                Main.PIECE_DIAMETER, Main.PIECE_DIAMETER);
+        return new Ellipse(px * GameSettings.HEX_DIAMETER + GameSettings.SCREEN_SIZE / 2,
+                py * (GameSettings.HEX_DIAMETER - (GameSettings.Y_OFFSET - GameSettings.VISUAL_OFFSET)) + GameSettings.SCREEN_SIZE / 2,
+                GameSettings.PIECE_DIAMETER, GameSettings.PIECE_DIAMETER);
     }
 
     public String toString() {

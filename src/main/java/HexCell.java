@@ -171,6 +171,15 @@ public class HexCell<K> {
         return new Point<HexCell<K>>(this, -1*(dx-dy)/2, dz);
     }
 
+    public boolean areCorrectCoordinates(int x, int y, int z){
+        if(this.x == x && this.y == y && this.z == z){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     public String toString() {
         return ("(" + x + "," + y + "," + z + ")");
