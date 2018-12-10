@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class Server {
      * Runs the application. Pairs up clients that connect.
      */
     public static void main(String[] args) throws Exception {
-        ServerSocket listener = new ServerSocket(9898);
+        ServerSocket listener = new ServerSocket(9898,0, InetAddress.getByName("localhost"));
         System.out.println("Server is Running");
         try {
             while (true) {
