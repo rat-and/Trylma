@@ -15,7 +15,8 @@ public class Client {
 
     Client(Main mainStage){
         this.mainStage = mainStage;
-        serverAddress = "192.168.1.13";
+        //serverAddress = "192.168.1.13";
+        serverAddress = "LOCALHOST";
         port = 9898;
     }
 
