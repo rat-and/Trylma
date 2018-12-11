@@ -1,17 +1,21 @@
+package Other;
+
+import javafx.scene.control.Cell;
+
 import java.util.ArrayList;
 
 public class HexCell<K> {
-    /** Data held in HexCell */
+    /** Data held in Other.HexCell */
     private K key;
     /** (x,y,z) coordinates. x+y+z=0 at all times */
     private int x, y, z;
-    /** Neighboring HexCells. Char1 -> increase Dimension, Char2 -> decrease */
+    /** Neighboring HexCells. Char1 -> increase Other.Dimension, Char2 -> decrease */
     private HexCell<K> xy, xz, yx, yz, zx, zy;
     /** For iteration. Notes whether the node has been visited */
     private boolean visited;
 
     /**
-     * Constructs HexCell
+     * Constructs Other.HexCell
      * @param key data held in node
      * @param x x coordinate
      * @param y y coordinate
@@ -26,6 +30,31 @@ public class HexCell<K> {
         this.x = x;
         this.y = y;
         this.z = z;
+        visited = false;
+    }
+
+    /**
+     *
+     * @param str string like (x,y,z)
+     * @throws IllegalArgumentException
+     */
+    public HexCell(String str) {
+        int i = str.indexOf('(');
+        int j = str.indexOf(',');
+        key = null;
+        String helper = str.substring(i+1,j);
+        x = Integer.parseInt(helper);
+        i = j;
+        j = str.indexOf(',', i+1);
+        helper = str.substring(i+1,j);
+        y = Integer.parseInt(helper);
+        i = j;
+        j = str.indexOf(')', i+1);
+        helper = str.substring(i+1,j);
+        z = Integer.parseInt(helper);
+
+        /** Error Handling: x, y, and z must add up to 0 */
+        if(x+y+z != 0) throw new IllegalArgumentException();
         visited = false;
     }
 
@@ -152,7 +181,7 @@ public class HexCell<K> {
 
     /**
      * Determines if two HexCells have the same coordinates
-     * @param n other HexCell
+     * @param n other Other.HexCell
      * @return true if the two are equal, false otherwise
      */
     public boolean equals(HexCell<K> n) {
@@ -162,7 +191,7 @@ public class HexCell<K> {
 
     /**
      * Returns a 2-D (x,y) point to represent this node
-     * @return Point object with the HexCell and its 2-D (x,y) coordinate
+     * @return Other.Point object with the Other.HexCell and its 2-D (x,y) coordinate
      */
     public Point<HexCell<K>> pointConversion() {
         double dx = (double) x;
@@ -178,6 +207,20 @@ public class HexCell<K> {
         else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param str string like (x,y,z)
+     * @return new HexCell(x,y,z)
+     * @throws IllegalArgumentException
+     */
+    public HexCell<K> createFromString(String str)throws IllegalArgumentException{
+        int i = str.indexOf('(');
+        int x1 = str.charAt(i+1);
+        int y1 = str.charAt(i+3);
+        int z1 = str.charAt(i+5);
+        return new HexCell<K>(null,x1,y1,z1);
     }
 
 

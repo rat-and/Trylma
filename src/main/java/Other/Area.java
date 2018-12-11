@@ -1,5 +1,6 @@
+package Other;
+
 import javafx.event.EventHandler;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -47,14 +48,14 @@ public class Area extends Pane {
                     //tutaj chyba zle
                     graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
                     graphicsContext.setFill(Color.BLACK);
-//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Other.Main.PIECE_DIAMETER, 2 * Other.Main.PIECE_DIAMETER);
                 }
                 /** draws move-assistant */
                 else if (GameSettings.MOVE_ASSISTANCE && this.isPossibleMove(p)) {
                     graphicsContext.setFill(Color.gray(0.5, 0.5));
                     graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
 //                    graphicsContext.setFill(Color.BLACK);
-//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Other.Main.PIECE_DIAMETER, 2 * Other.Main.PIECE_DIAMETER);
                 }
                 /** if there*s no piece */
                 else {
@@ -74,14 +75,14 @@ public class Area extends Pane {
                     graphicsContext.setFill(p.getKey().getKey().getColor());
                     graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
 //                    graphicsContext.setFill(Color.BLACK);
-//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Other.Main.PIECE_DIAMETER, 2 * Other.Main.PIECE_DIAMETER);
                 }
                 /** move assistant mechanism */
                 else if (GameSettings.MOVE_ASSISTANCE && isPossibleMove(p)) {
                     graphicsContext.setFill(Color.gray(0.5, 0.5));
                     graphicsContext.fillOval(p.getEllipse().getCenterX() - .5*GameSettings.PIECE_DIAMETER, p.getEllipse().getCenterY() - .5*GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER, 2 * GameSettings.PIECE_DIAMETER);
 //                    graphicsContext.setFill(Color.BLACK);
-//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Main.PIECE_DIAMETER, 2 * Main.PIECE_DIAMETER);
+//                    graphicsContext.fillOval(p.getEllipse().getCenterX(), p.getEllipse().getCenterY(), 2 * Other.Main.PIECE_DIAMETER, 2 * Other.Main.PIECE_DIAMETER);
                 }
                 /** if no piece and it's not possilbe move */
                 else {
@@ -117,7 +118,7 @@ public class Area extends Pane {
         }
     }
 
-    // DO hexcella jest wstawiony Piece
+    // DO hexcella jest wstawiony Other.Piece
     private boolean isPlayer(Point<HexCell<Piece>> p) {
         if(p == null || p.getKey().getKey() == null) return false;
         return (p.getKey().getKey().getPlayer().equals(GameSettings.PLAYERS[currentPlayerIndex]));

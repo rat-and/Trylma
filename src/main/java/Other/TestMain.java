@@ -1,3 +1,5 @@
+package Other;
+
 public class TestMain {
     private static Client client;
 

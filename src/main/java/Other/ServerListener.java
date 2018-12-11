@@ -1,7 +1,6 @@
+package Other;
+
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 public class ServerListener extends Thread{
     private Client client;
@@ -18,6 +17,7 @@ public class ServerListener extends Thread{
         run = false;
     }
 
+    @Override
     public void run(){
         String response;
         while(run){
@@ -25,7 +25,7 @@ public class ServerListener extends Thread{
                 response = in.readLine();
                 client.receive(response);
             }catch(Exception e){
-                client.criticalerror();
+                client.critical_error();
             }
         }
     }

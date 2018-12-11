@@ -1,3 +1,5 @@
+package Other;
+
 import javafx.scene.shape.Ellipse;
 
 public class Point<K> {
