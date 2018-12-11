@@ -1,14 +1,16 @@
+package Other;
+
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
 public class Board {
 
-    /** Board data srtucture */
+    /** Other.Board data srtucture */
     private Latticing<Piece> latticeBoard;
     /** Array of Players */
     private Color[] players;//TODO: Combine this players with server
-    /** Board radius */
+    /** Other.Board radius */
     private int radius;
     /** Win Locations */
     ArrayList<ArrayList<HexCell<Piece>>> winLocs;
@@ -245,7 +247,7 @@ public class Board {
      */
     public Point<HexCell<Piece>> getNearestOpenPoint(Point<HexCell<Piece>> point) {
 
-        /** Error Handling: Point and its key must be non-null */
+        /** Error Handling: Other.Point and its key must be non-null */
         if(point == null || point.getKey() == null) throw new IllegalArgumentException();
 
         int shortestDistance = radius*2;

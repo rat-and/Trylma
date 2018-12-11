@@ -1,3 +1,5 @@
+package Other;
+
 import javafx.scene.paint.Color;
 
 public class GameSettings {

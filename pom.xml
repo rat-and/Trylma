@@ -10,6 +10,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx</artifactId>
             <version>11-ea+25</version>
@@ -32,7 +38,7 @@
                 <configuration>
                     <classpathScope>test</classpathScope>
                     <!-- class name to execute -->
-                    <mainClass>Main</mainClass>
+                    <mainClass>Other.Main</mainClass>
                 </configuration>
                 <executions>
                     <execution>

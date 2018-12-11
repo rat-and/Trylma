@@ -1,28 +1,17 @@
+package Other;
+
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-
-import java.util.Random;
-
-import static com.sun.javafx.scene.control.skin.Utils.getResource;
 /**
- * Client
+ * Other.Client
  *
  *  PROTOCOL:
- *  Client -> Server           Server -> Client
+ *  Other.Client -> Other.Server           Other.Server -> Other.Client
  *  ----------------           ----------------
  *  MOVE <src> <dst> (x,y,z)   WELCOME PLAYER<int>  (player number)
  *  EXIT                       PLAYER_MOVED: <src> <dst> (x,y,z)
@@ -81,7 +70,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 //        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
 
-        //client.connectToServer(); TODO: uncomment in future
+        client.connectToServer(); //TODO: uncomment in future
 
         Group root = new Group();
         primaryStage.setTitle("Trylma");

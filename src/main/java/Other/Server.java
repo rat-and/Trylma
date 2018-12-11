@@ -1,3 +1,9 @@
+package Other;
+
+import Protocols.Protocol;
+import Protocols.ServerProtocol;
+import Protocols.StandardServerProtocol;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,7 +17,7 @@ import java.util.ArrayList;
  * A server for a network multi-player game.  Modified and
  *
  *  PROTOCOL:
- *  Client -> Server           Server -> Client
+ *  Other.Client -> Other.Server           Other.Server -> Other.Client
  *  ----------------           ----------------
  *  MOVE <src> <dst> (x,y,z)   WELCOME PLAYER<int>  (player number)
  *  EXIT                       PLAYER_MOVED: <src> <dst> (x,y,z)
@@ -31,7 +37,7 @@ public class Server {
         System.out.println("Server is Running");
         try {
             while (true) {
-                //TODO: Normal Server start
+                //TODO: Normal Other.Server start
                 // 1. Enough Players
                 // 2. Players cicle
                 // 3. Run players
@@ -39,9 +45,9 @@ public class Server {
                 Game.Player a = game.new Player(listener.accept(),0,null);
                 a.start();
                 /*
-                Game game = new Game();
-                Game.Player playerX = game.new Player(listener.accept());
-                Game.Player playerO = game.new Player(listener.accept());
+                Other.Game game = new Other.Game();
+                Other.Game.Player playerX = game.new Player(listener.accept());
+                Other.Game.Player playerO = game.new Player(listener.accept());
                 game.currentPlayer = playerX;
                 playerX.start();
                 playerO.start();
@@ -59,12 +65,15 @@ class Game {
 
     Game(){  //                             TODO: Here we will have defind amount of players
         board = new Board(GameSettings.BOARD_RADIUS, GameSettings. PLAYERS);
+        protocol = new StandardServerProtocol();
     }
+
     /**
      * The current player.
      */
     Player currentPlayer;
     ArrayList<Player> players;
+    ServerProtocol protocol;
 
 
     /**
@@ -98,9 +107,7 @@ class Game {
     }
 
     /**
-     * The class for the helper threads in this multithreaded server
-     * application.  A Player is identified by a character mark
-     * which is either 'X' or 'O'.  For communication with the
+     * Thread for communication with the
      * client the player has a socket with its input and output
      * streams.  Since only text is being communicated we use a
      * reader and a writer.
@@ -125,8 +132,8 @@ class Game {
                 input = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
                 output = new PrintWriter(socket.getOutputStream(), true);
-                output.println("WELCOME PLAYER:" + order);
-                output.println("MESSAGE Waiting for opponent to connect");
+                output.println(protocol.createMessageToClient(Protocol.ServerToClientType.WELCOME, Integer.toString(order)));
+                //output.println("MESSAGE Waiting for opponent to connect");
             } catch (IOException e) {
                 System.out.println("Player died: " + e);
             }
@@ -141,8 +148,7 @@ class Game {
          * We sent updated info from board to other clients
          */
         public void otherPlayerMoved(HexCell<Piece>src, HexCell<Piece> dst) {
-            // TODO: Sent packet here
-            output.println("PLAYER_MOVED: " + src + dst);
+            output.println(protocol.createMessageToClient(Protocol.ServerToClientType.PLAYER_MOVED, src.toString() + dst.toString()));
         }
 
         /**
@@ -151,36 +157,53 @@ class Game {
         public void run() {
             try {
                 // The thread is only started after everyone connects.
-                output.println("MESSAGE All players connected");
+                output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "All players connected"));
 
                 // Tell the first player that it is her turn.
                 if (order == 0) {
-                    output.println("MESSAGE Your move");
+                    output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "Your Move"));
                 }
 
-                output.println("EXIT");
-                /*
-                // Repeatedly get commands from the client and process them.
-                while (true) {
+               // output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "End"));
 
+                // Repeatedly get commands from the client and process them.
+                boolean on = true;
+                while (on) {
                     String command = input.readLine();
-                    if (command.startsWith("MOVE")) {
-                        int location = Integer.parseInt(command.substring(5));//TODO: Conversion to board location
-                        HexCell<Piece>src = new HexCell<Piece>(null,0,0,0);
-                        HexCell<Piece> dst = new HexCell<Piece>(null,0,0,0);
-                        if (legalMove(src, dst, this)) {
-                            output.println("VALID_MOVE");
-                            output.println("");
-                        } else {
-                            output.println("MESSAGE ?");
-                        }
-                    } else if (command.startsWith("QUIT")) {
-                        return;
+                    switch(protocol.interpretClientMessage(command)){
+                        case EXIT:
+
+                            output.println("EXIT");
+                                on = false;
+                                break;
+                        case MOVE:
+
+                                String prep = protocol.getPreparedMessage();
+
+                                try {
+                                    HexCell<Piece> src = new HexCell<Piece>(prep);
+                                    prep = prep.substring(prep.indexOf(')') + 1 );
+                                    HexCell<Piece> dst = new HexCell<Piece>(prep);
+
+                                    if (legalMove(src, dst, this)) {
+                                        output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "Valid move"));
+                                    } else {
+                                        output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "Invalid move"));
+                                    }
+                                }
+                                catch (IllegalArgumentException e){
+                                    output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "Can`t convert src && dst"));
+                                }
+                            break;
+
+                            default:
+                                break;
                     }
                 }
-                */
+
             } catch (Exception e) {
-                System.out.println("Player died: " + e);
+                e.printStackTrace();
+                //System.out.println("Player died: " + e.printStackTrace());
             } finally {
                 try {socket.close();} catch (IOException e) {}
             }
