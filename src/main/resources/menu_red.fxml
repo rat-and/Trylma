@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #20120F;" fx:controller="Controllers.MenuOptionController" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane layoutX="324.0" layoutY="29.0" opacity="0.96" prefHeight="242.0" prefWidth="234.0" style="-fx-background-color: #9C2B27;">
+         <children>
+            <Text layoutX="9.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Nick" wrappingWidth="61.13671875" />
+            <TextField fx:id="playerNick" layoutX="71.0" layoutY="87.0" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: #BC4B47;" />
+            <Button layoutX="70.0" layoutY="157.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" style="-fx-background-color: #20120F;" text="Connect" textFill="WHITE"  onAction="#launchBoard"/>
+            <Text fill="WHITE" fontSmoothingType="LCD" layoutX="70.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Join the game" wrappingWidth="115.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+      <ImageView fitHeight="181.0" fitWidth="227.0" layoutX="58.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/checkers.jpg" />
+         </image>
+      </ImageView>
+      <Text fill="WHITE" layoutX="79.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Trylma" wrappingWidth="141.0">
+         <font>
+            <Font name="Castellar" size="28.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
