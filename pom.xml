@@ -32,7 +32,7 @@
                 <configuration>
                     <classpathScope>test</classpathScope>
                     <!-- class name to execute -->
-                    <mainClass>Main</mainClass>
+                    <mainClass>GUI.Main</mainClass>
                 </configuration>
                 <executions>
                     <execution>

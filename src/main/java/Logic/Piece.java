@@ -1,3 +1,5 @@
+package Logic;
+
 import javafx.scene.paint.Color;
 
 public class Piece {

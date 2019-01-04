@@ -1,17 +1,19 @@
+package Logic;
+
 import java.util.ArrayList;
 
 public class HexCell<K> {
-    /** Data held in HexCell */
+    /** Data held in Logic.HexCell */
     private K key;
     /** (x,y,z) coordinates. x+y+z=0 at all times */
     private int x, y, z;
-    /** Neighboring HexCells. Char1 -> increase Dimension, Char2 -> decrease */
+    /** Neighboring HexCells. Char1 -> increase Logic.Dimension, Char2 -> decrease */
     private HexCell<K> xy, xz, yx, yz, zx, zy;
     /** For iteration. Notes whether the node has been visited */
     private boolean visited;
 
     /**
-     * Constructs HexCell
+     * Constructs Logic.HexCell
      * @param key data held in node
      * @param x x coordinate
      * @param y y coordinate
@@ -152,7 +154,7 @@ public class HexCell<K> {
 
     /**
      * Determines if two HexCells have the same coordinates
-     * @param n other HexCell
+     * @param n other Logic.HexCell
      * @return true if the two are equal, false otherwise
      */
     public boolean equals(HexCell<K> n) {
@@ -162,7 +164,7 @@ public class HexCell<K> {
 
     /**
      * Returns a 2-D (x,y) point to represent this node
-     * @return Point object with the HexCell and its 2-D (x,y) coordinate
+     * @return Logic.Point object with the Logic.HexCell and its 2-D (x,y) coordinate
      */
     public Point<HexCell<K>> pointConversion() {
         double dx = (double) x;
