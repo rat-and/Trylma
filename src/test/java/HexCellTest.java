@@ -1,5 +1,6 @@
-import Other.HexCell;
-import Other.Piece;
+import Logic.HexCell;
+import Logic.Piece;
+
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
