@@ -1,4 +1,4 @@
-package Other;
+package Logic;
 
 import javafx.scene.paint.Color;
 
@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class Board {
 
-    /** Other.Board data srtucture */
+    /** Logic.Board data srtucture */
     private Latticing<Piece> latticeBoard;
     /** Array of Players */
-    private Color[] players;//TODO: Combine this players with server
-    /** Other.Board radius */
+    private Color[] players;
+    /** Logic.Board radius */
     private int radius;
     /** Win Locations */
     ArrayList<ArrayList<HexCell<Piece>>> winLocs;
@@ -37,7 +37,7 @@ public class Board {
      *
      */
     private void createCenter() {
-        for (int x = -1 * (radius); x <= radius - 1; x++) {
+        for (int x = -1 * (radius-1); x <= radius - 1; x++) {
             for (int y = -1 * (radius - 1); y <= radius - 1; y++) {
                 if (-1 * (x + y) >= -1 * (radius - 1) && -1 * (x + y) <= radius - 1) {
                     latticeBoard.insert(new HexCell<Piece>(null, x, y, -1 * (x + y)));
@@ -120,7 +120,6 @@ public class Board {
 
     public boolean move(HexCell<Piece> src, HexCell<Piece> dst) {
         if(!isValidMove(src, dst)) return false;
-
         latticeBoard.flipNodes(src, dst);
         return true;
     }
@@ -247,7 +246,7 @@ public class Board {
      */
     public Point<HexCell<Piece>> getNearestOpenPoint(Point<HexCell<Piece>> point) {
 
-        /** Error Handling: Other.Point and its key must be non-null */
+        /** Error Handling: Logic.Point and its key must be non-null */
         if(point == null || point.getKey() == null) throw new IllegalArgumentException();
 
         int shortestDistance = radius*2;

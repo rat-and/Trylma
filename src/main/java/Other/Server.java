@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import Logic.*;
 
 /**
  * A server for a network multi-player game.  Modified and
@@ -33,7 +34,7 @@ public class Server {
      * Runs the application. Pairs up clients that connect.
      */
     public static void main(String[] args) throws Exception {
-        ServerSocket listener = new ServerSocket(9898,0, InetAddress.getByName("localhost"));
+        ServerSocket listener = new ServerSocket(9009,0, InetAddress.getByName("localhost"));
         System.out.println("Server is Running");
         try {
             while (true) {
