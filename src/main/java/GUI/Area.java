@@ -2,15 +2,11 @@ package GUI;
 
 import Logic.*;
 
-import javafx.event.EventHandler;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Area extends Pane {
     private static final long SERIAL_VERSION = 1L;

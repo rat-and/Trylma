@@ -127,6 +127,7 @@ public class Main extends Application {
             rootLayout.getChildren().add(canvas);
 
             primaryStage.show();
+            rootController.reDrawArea();
 
         } catch (IOException e) {
             e.printStackTrace();

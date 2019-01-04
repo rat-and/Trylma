@@ -31,25 +31,6 @@ public class Observer {
 
     @FXML
     private void initialize() {
-//        Random random = new Random(System.currentTimeMillis());
-////        double width = canvas.getWidth();
-////        double height = canvas.getHeight();
-//        gc.setFill(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255), 0.9));
-//        gc.translate(500 / 2, 500 / 2);
-//
-//        for (int i = 0; i < 60; i++) {
-//            gc.rotate(6.0);
-//            gc.setFill(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255), 0.9));
-//            gc.fillOval(10, 60, 30, 30);
-//            gc.strokeOval(60, 60, 30, 30);
-//            gc.setFill(Color.rgb(random.nextInt(255), random.nextInt(255),random.nextInt(255), 0.9));
-//            gc.fillRoundRect(110, 60, 30, 30, 10, 10);
-//            gc.setFill(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255), 0.9));
-//            gc.fillPolygon(
-//                    new double[] { 105, 117, 159, 123, 133, 105, 77, 87,51, 93 },
-//                    new double[] { 150, 186, 186, 204, 246, 222, 246,204, 186, 186 },
-//                    10);
-//        }
     }
 
     public void initModel(Model model) {

@@ -34,6 +34,10 @@ public class Controller implements Runnable {
         this.area = area;
     }
 
+    public void reDrawArea() {
+        area.reDraw();
+    }
+
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
     }
@@ -46,22 +50,26 @@ public class Controller implements Runnable {
         this.model = model;
     }
 
+    public void clearModel() {
+        model.clearPointList();
+    }
+
     /**
      * handler that adds a point
      */
-    @FXML
-    private void addPoint(MouseEvent event) {
-        Point2D point2D = new Point2D(event.getX(), event.getY());
-        model.getPoints().add(point2D);
-        System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
-    }
-
-    public EventHandler pointsAdder = new javafx.event.EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    addPoint(event);
-                }
-            };
+//    @FXML
+//    private void addPoint(MouseEvent event) {
+//        Point2D point2D = new Point2D(event.getX(), event.getY());
+//        model.getPoints().add(point2D);
+//        System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
+//    }
+//
+//    public EventHandler pointsAdder = new javafx.event.EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    addPoint(event);
+//                }
+//            };
 
     public EventHandler mouseClicked = new javafx.event.EventHandler<MouseEvent>() {
         @Override
@@ -121,8 +129,8 @@ public class Controller implements Runnable {
                     }
                 }
             }
-            area.reDraw();
-            model.clearPointList();
+            reDrawArea();
+            clearModel();
         }
     };
 

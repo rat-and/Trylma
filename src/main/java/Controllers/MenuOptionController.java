@@ -41,8 +41,17 @@ public class MenuOptionController {
     protected void launchBoard(ActionEvent event) {
         setNick(playerNick.getText());
         Main.initRootLayout();
-        Main.overView();
-        Observer.drawNewBoard();
+//        Main.overView();
+//        Observer.drawNewBoard();
+        System.out.println(nick);
+    }
+
+    @FXML
+    protected void setUpServer(ActionEvent event) {
+        setNick(playerNick.getText());
+        Main.initRootLayout();
+//        Main.overView();
+//        Observer.drawNewBoard();
         System.out.println(nick);
     }
 
