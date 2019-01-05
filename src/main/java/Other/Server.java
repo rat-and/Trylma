@@ -69,7 +69,7 @@ public class Server extends Thread {
      */
 
     /**
-     * @param port    {4000-20000}
+     * @param port    [0-59999]
      * @param ip      {x.x.x.x}
      * @param players {1,2,3,6}
      */
@@ -95,11 +95,11 @@ public class Server extends Thread {
                     sh.increment();
                 }
                 game.setPlayersArray(game_players);
+                game.createNewGame();
 
                 for (Game.Player p : game_players) {
                     p.start();
                 }
-
 
 
                 sh.setLogMessage("Server is running",this);
@@ -117,8 +117,8 @@ public class Server extends Thread {
                 listener.close();
                 sh.setLogMessage("Server closed action",this);
             }
-        } catch(IOException e1) {
-            sh.setLogMessage("ERROR1: " + e1.getMessage() + "\n IO exception", this);
+        } catch(Exception e1) {
+            sh.setLogMessage("ERROR1: " + e1.getMessage() + "\n Server exception", this);
         }
 
 

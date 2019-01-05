@@ -19,10 +19,14 @@ class Game {
 
     private Board board;
 
-    Game(){  //                             TODO: Here we will have defind amount of players
-        board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
+    Game(){
         protocol = new StandardServerProtocol();
         players = new ArrayList<>();
+    }
+
+    public void createNewGame()
+    {
+        board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
     }
 
     public void stopGame(){
@@ -31,6 +35,10 @@ class Game {
         }
     }
 
+    /**
+     *
+     * @return true if there are more than 1 threads running
+     */
     public boolean hasRunningSockets(){
         if(players.size() >= 1)
             return true;
@@ -38,6 +46,9 @@ class Game {
         return false;
     }
 
+    /**
+     * @param al  arrayList of threads to control
+     */
     public void setPlayersArray(ArrayList<Player>al){
         players = al;
     }
@@ -115,14 +126,17 @@ class Game {
             }
         }
 
+        /**
+         * Closes the thread and thus socket
+         */
         public void close(){
-            try {
+           // try {
                 output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE,"Socket was called to close"));
-                this.socket.close();
+               //this.socket.close(); // SOCKET WILL BE CLOSED WHEN THREAD ENDS HIS JOB
                 this.on = false;
-            } catch (IOException e) {
+            //} //catch (IOException e) {
                 //e.printStackTrace();
-            }
+            //}
         }
 
         public int getOrder(){
