@@ -32,6 +32,31 @@ public class HexCell<K> {
     }
 
     /**
+     *
+     * @param str string like (x,y,z)
+     * @throws IllegalArgumentException
+     */
+    public HexCell(String str) {
+        int i = str.indexOf('(');
+        int j = str.indexOf(',');
+        key = null;
+        String helper = str.substring(i+1,j);
+        x = Integer.parseInt(helper);
+        i = j;
+        j = str.indexOf(',', i+1);
+        helper = str.substring(i+1,j);
+        y = Integer.parseInt(helper);
+        i = j;
+        j = str.indexOf(')', i+1);
+        helper = str.substring(i+1,j);
+        z = Integer.parseInt(helper);
+
+        /** Error Handling: x, y, and z must add up to 0 */
+        if(x+y+z != 0) throw new IllegalArgumentException();
+        visited = false;
+    }
+
+    /**
      * Sets key
      * @param key new key
      */
