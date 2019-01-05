@@ -28,35 +28,97 @@ import Logic.*;
  * A second change is that it allows an unlimited number of pairs of
  * players to play.
  */
-public class Server {
+public class Server extends Thread {
+
+    private ServerCreator sh;
+    private Game game;
+    private int port;
+    private String ip;
+    private int players;
+    private ServerSocket listener;
+
+    Server(ServerCreator handler) {
+        sh = handler;
+    }
+
+    public ServerSocket getServerSocket() {
+        return listener;
+    }
+
+    public void close(){
+        if(listener == null)
+            return;
+        try {
+            if (!listener.isClosed())
+                listener.close();
+        }catch(Exception e){
+            sh.setLogMessage("WARNING2: " + e.getMessage() + "\n close failure...",this);
+        }
+    }
 
     /**
      * Runs the application. Pairs up clients that connect.
      */
-    public static void main(String[] args) throws Exception {
-        ServerSocket listener = new ServerSocket(9009,0, InetAddress.getByName("localhost"));
-        System.out.println("Server is Running");
+
+    /**
+     * @param port    {4000-20000}
+     * @param ip      {x.x.x.x}
+     * @param players {1,2,3,6}
+     */
+    public void setNewGame(int port, String ip, int players) {
+        this.port = port;
+        this.ip = ip;
+        this.players = players;
+    }
+
+    public void run() {
         try {
-            while (true) {
-                //TODO: Normal Other.Server start
-                // 1. Enough Players
-                // 2. Players cicle
-                // 3. Run players
-                Game game = new Game();
-                Game.Player a = game.new Player(listener.accept(),0,null);
-                a.start();
-                /*
-                Other.Game game = new Other.Game();
-                Other.Game.Player playerX = game.new Player(listener.accept());
-                Other.Game.Player playerO = game.new Player(listener.accept());
-                game.currentPlayer = playerX;
-                playerX.start();
-                playerO.start();
-                */
+            listener = new ServerSocket(port, 0, InetAddress.getByName(ip));
+
+            sh.setLogMessage("Server is waiting for all players\n\t to join\n",this);
+            try {
+                GameSettings.NUM_HUMAN_PLAYERS = players;
+                ArrayList<Game.Player> game_players = new ArrayList<>();
+                game = new Game();
+
+                for (int i = 0; i < players; ++i) {
+                    Game.Player a = game.new Player(listener.accept(), 0, null);
+                    game_players.add(a);
+                    sh.increment();
+                }
+                game.setPlayersArray(game_players);
+
+                for (Game.Player p : game_players) {
+                    p.start();
+                }
+
+
+
+                sh.setLogMessage("Server is running",this);
+                sh.setState(ServerState.RUNNING);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    //
+                }
+
+                while(game.hasRunningSockets()){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        //e.printStackTrace();
+                    }
+                }
+
+            } finally {
+                listener.close();
+                sh.setLogMessage("Server closed action",this);
             }
-        } finally {
-            listener.close();
+        } catch(IOException e1) {
+            sh.setLogMessage("ERROR1: " + e1.getMessage() + "\n IO exception", this);
         }
+
+
     }
 }
 
@@ -65,8 +127,20 @@ class Game {
     private Board board;
 
     Game(){  //                             TODO: Here we will have defind amount of players
-        board = new Board(GameSettings.BOARD_RADIUS, GameSettings. PLAYERS);
+        board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
         protocol = new StandardServerProtocol();
+        players = new ArrayList<>();
+    }
+
+    public boolean hasRunningSockets(){
+        if(players.size() >= 1)
+            return true;
+
+        return false;
+    }
+
+    public void setPlayersArray(ArrayList<Player>al){
+        players = al;
     }
 
     /**
@@ -75,7 +149,6 @@ class Game {
     Player currentPlayer;
     ArrayList<Player> players;
     ServerProtocol protocol;
-
 
     /**
      * Called by the player threads when a player tries to make a
@@ -136,7 +209,9 @@ class Game {
                 output.println(protocol.createMessageToClient(Protocol.ServerToClientType.WELCOME, Integer.toString(order)));
                 //output.println("MESSAGE Waiting for opponent to connect");
             } catch (IOException e) {
+
                 System.out.println("Player died: " + e);
+                players.remove(this);
             }
         }
 
@@ -203,10 +278,10 @@ class Game {
                 }
 
             } catch (Exception e) {
+                players.remove(this);
                 e.printStackTrace();
-                //System.out.println("Player died: " + e.printStackTrace());
             } finally {
-                try {socket.close();} catch (IOException e) {}
+                try {socket.close();} catch (IOException e) { players.remove(this);}
             }
         }
     }

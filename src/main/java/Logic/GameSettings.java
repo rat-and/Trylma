@@ -11,7 +11,7 @@ public class GameSettings {
     public static final double VISUAL_OFFSET = ((double) HEX_DIAMETER/2) * Math.sqrt(2)/9;
 
     public static final boolean MOVE_ASSISTANCE = true;
-    public static final int NUM_HUMAN_PLAYERS = 3;
+    public static int NUM_HUMAN_PLAYERS = 1;
     public static final Color[] PLAYERS = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.GRAY};
     public static final String[] PLAYER_NAMES = {"Red", "Blue", "Green", "Yellow", "Pink", "Gray"};
 }

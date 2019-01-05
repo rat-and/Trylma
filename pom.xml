@@ -21,6 +21,12 @@
             <version>11-ea+25</version>
             <type>pom</type>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.intellij/forms_rt -->
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>6.0.5</version>
+        </dependency>
     </dependencies>
 
     <properties>

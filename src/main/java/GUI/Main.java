@@ -76,7 +76,7 @@ public class Main extends Application {
 
 //        initRootLayout();
         initMenuLayout();
-        client.connectToServer("Lcoalhost",9007);//TODO: ADDRESS AND PORT OF SERVER
+        client.connectToServer("LOCALHOST",9009);//TODO: ADDRESS AND PORT OF SERVER
 //        overView();
 
 
