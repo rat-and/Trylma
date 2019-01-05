@@ -17,17 +17,17 @@ public class ServerListener extends Thread{
         run = false;
     }
 
-    @Override
-    public void run(){
-        String response;
-        while(run){
-            try {
-                response = in.readLine();
-                client.receive(response);
-            }catch(Exception e){
-                client.critical_error();
-            }
-        }
-    }
+//    @Override
+//    public void run(){
+//        String response;
+//        while(run){
+//            try {
+//                response = in.readLine();
+//                client.receive(response);
+//            }catch(Exception e){
+//                client.critical_error();
+//            }
+//        }
+//    }
 
 }

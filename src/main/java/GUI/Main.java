@@ -3,6 +3,8 @@ package GUI;
 import Controllers.*;
 import Logic.Board;
 import Logic.GameSettings;
+import Other.Client;
+import Other.Server;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -15,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -26,12 +29,14 @@ public class Main extends Application {
     private AnchorPane menuLayout;
     private static Model model;
     private static Canvas canvas;
+    private static Client client;
+    private static ArrayList<Server> serverList = new ArrayList<Server>();
 
     public static void main(String[] args) {
         launch(args);
     }
 
-     public void newGame() {
+    public void newGame() {
         initBoard();
     }
 
@@ -41,6 +46,14 @@ public class Main extends Application {
 
     private void initScreen() {
         area = new Area(this);
+    }
+
+    public static void initClient(int portNumber) {
+        client = new Client(portNumber);
+    }
+
+    public static void addServer(int portNumber) {
+        serverList.add(new Server(portNumber));
     }
 
     public static Board getBoard() {
@@ -55,6 +68,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         initScreen();
         initBoard();
+//        initClient();
 
         this.model = new Model();
         this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
@@ -64,6 +78,7 @@ public class Main extends Application {
 
 //        initRootLayout();
         initMenuLayout();
+//        client.connectToServer("Lcoalhost",9007);//TODO: ADDRESS AND PORT OF SERVER
 //        overView();
 
 
@@ -89,6 +104,7 @@ public class Main extends Application {
             menuController.setArea(area);
             menuController.setCanvas(canvas);
             menuController.setModel(model);
+            menuController.setDefaultServer();
 
             primaryStage.show();
         } catch (IOException e) {
