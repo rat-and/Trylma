@@ -74,6 +74,7 @@ public class ServerCreator {
                         count = Integer.parseInt(socketsComboBox.getSelectedItem().toString());
                         Server server = new Server(sh);
                         if (cur_serv != null) {
+                            cur_serv.endGame();
                             cur_serv.close();
                             cur_serv = null;
                         }
