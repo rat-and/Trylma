@@ -8,7 +8,11 @@ import Other.Server;
 import Other.ServerCreator;
 import Other.ServerState;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.rmi.server.ExportException;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,9 +28,12 @@ public class ConnectionTests {
         Server server;
         Client client;
 
-        sc = new ServerCreator();
+        sc = Mockito.mock(ServerCreator.class);
+        //sc = new ServerCreator();
         server = new Server(sc);
         client = new Client();
+
+        //when(sc.setLogMessage(Matchers.any(String.class),server))
 
         server.setNewGame(9007,"LOCALHOST",1);
         server.start();
@@ -47,5 +54,12 @@ public class ConnectionTests {
     {
         Client c = new Client();
         c.connectToServer("LOCALHOST", 999999);
+    }
+
+    @Test (expected = Exception.class)
+    public void testWrongData() throws Exception
+    {
+        Client c = new Client();
+        c.receive("MOVE: (-1,0,2)(0,0,0)");
     }
 }
