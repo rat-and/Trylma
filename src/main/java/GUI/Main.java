@@ -86,16 +86,16 @@ public class Main extends Application {
         initBoard();
         initClient();
 
-        //uncomment when launch Main.class
-        this.model = new Model();
-        this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
+        /*uncomment when launch Main.class*/
+//        this.model = new Model();
+//        this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Trylma");
 
 //        initRootLayout();
-        initMenuLayout();
-        overView();
+//        initMenuLayout();
+//        overView();
 
 
     }
@@ -127,7 +127,8 @@ public class Main extends Application {
         }
     }
 
-    public static void initRootLayout() {
+    /*when launch from Main.class change for static method*/
+    public void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/board.fxml"));
@@ -150,7 +151,7 @@ public class Main extends Application {
             rootController.initModel(model);
             rootController.setArea(area);
             rootController.setCanvas(canvas);
-//            rootController.setMain(this);
+            rootController.setMain(this);
 
             rootLayout.setOnMouseClicked(rootController.mouseClicked);
 

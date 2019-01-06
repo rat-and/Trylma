@@ -107,16 +107,17 @@ public class Controller implements Runnable {
                         System.out.println("Point within a piece - 3st if");
                         model.getPoints().add(new Point2D(event.getX(),  event.getY()));
 
-                        if(Main.getBoard().move(toMove, p.getKey())) {
+                        /*when lauch form Main.class use static reference Main.getClient... and so on*/
+                        if(main.getBoard().move(toMove, p.getKey())) {
                             /** Test for winner and run win sequence */
-                            Main.getClient().moveCommand(toMove.toString() + " " + p.getKey().toString());
-                            if(Main.getBoard().won() >= 0)
+                            main.getClient().moveCommand(toMove.toString() + " " + p.getKey().toString());
+                            if(main.getBoard().won() >= 0)
                                 area.runWinSequence(Main.getBoard().won());
                             /** Move to next player and run Computer Player */
                             area.nextPlayer();
                             while(area.getCurrentPlayerIndex() >= GameSettings.NUM_HUMAN_PLAYERS) {
                                 area.runComputerPlayer();
-                                if(Main.getBoard().won() >= 0) {
+                                if(main.getBoard().won() >= 0) {
                                     area.runWinSequence(Main.getBoard().won());
                                     break;
                                 }

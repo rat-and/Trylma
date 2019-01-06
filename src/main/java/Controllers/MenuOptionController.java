@@ -53,31 +53,27 @@ public class MenuOptionController {
     @FXML
     protected void launchBoard(ActionEvent event) {
         if (Model.isServerRunning()) {
-//            availableGames.getSelectionModel().selectedItemProperty().addListener(
-//                    (ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> setCurrentPort(newValue)
-//            );
-
-//            Platform.runLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        mainApp = new Main();
-//                        mainApp.start(new Stage());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
-
-
-            Main.setModel(model);
-            Main.setCanvas(canvas);
-
             setCurrentPort((Integer) availableGames.getValue());
 
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        mainApp = new Main();
+                        mainApp.start(new Stage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            /*When launch from Main.class use static Main, mainApp otherwise */
+            mainApp.setModel(model);
+            mainApp.setCanvas(canvas);
+            mainApp.connectClient(getCurrentPort());
+            mainApp.initRootLayout();
+
             setNick(playerNick.getText());
-            Main.connectClient(getCurrentPort());
-            Main.initRootLayout();
             System.out.println(nick);
         } else {
             Model.popupWarning("Couldn't find a server running");
