@@ -3,6 +3,7 @@ package GUI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
 /**
  * This class is used to communicate between server-client interface and GUI
@@ -11,6 +12,8 @@ import javafx.scene.control.Alert;
  */
 public class Model {
     private final ObservableList<Point2D> points;
+    private static ObservableList<Integer> runningPorts;
+    private static Stage stage;
 
     /**
      * Current state of a server. True, if there's at least one running server
@@ -22,9 +25,18 @@ public class Model {
         return points;
     }
 
+    public static ObservableList<Integer> getRunningPorts() {
+        return runningPorts;
+    }
+
     public Model()
     {
         this.points = FXCollections.observableArrayList();
+        this.runningPorts = FXCollections.observableArrayList();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public void clearPointList() {
@@ -39,11 +51,17 @@ public class Model {
         Model.serverRunning = serverRunning;
     }
 
+    public static void addRunningPorts(int portNumber) {
+        runningPorts.add(portNumber);
+        System.out.println("port no: " + portNumber + " added");
+    }
+
      public static void popupWarning(String warningMessage) {
        Alert alert = new Alert(Alert.AlertType.WARNING);
        alert.setTitle("Connection");
        alert.setHeaderText("Result:");
        alert.setContentText(warningMessage);
+       alert.initOwner(stage);
 
        alert.showAndWait();
     }

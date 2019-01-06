@@ -28,12 +28,22 @@ public class Main extends Application {
     private static Model model;
     private static Canvas canvas;
     private static Client client;
+    private MenuOptionController menuController;
+    private Observer observer;
 
     public static void main(String[] args) {
         launch(args);
     }
 
-     public void newGame() {
+    public static void setModel(Model model) {
+        Main.model = model;
+    }
+
+    public static void setCanvas(Canvas canvas) {
+        Main.canvas = canvas;
+    }
+
+    public void newGame() {
         initBoard();
     }
 
@@ -57,9 +67,9 @@ public class Main extends Application {
         return client;
     }
 
-    public static void connectClient() {
+    public static void connectClient(int port) {
         try {
-            client.connectToServer("LOCALHOST",9007);//TODO: ADDRESS AND PORT OF SERVER
+            client.connectToServer("LOCALHOST",port);//TODO: ADDRESS AND PORT OF SERVER
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,6 +86,7 @@ public class Main extends Application {
         initBoard();
         initClient();
 
+        //uncomment when launch Main.class
         this.model = new Model();
         this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
 
@@ -84,7 +95,7 @@ public class Main extends Application {
 
 //        initRootLayout();
         initMenuLayout();
-//        overView();
+        overView();
 
 
     }
@@ -105,10 +116,10 @@ public class Main extends Application {
                 }
             });
 
-            MenuOptionController menuController = loader.getController();
-            menuController.setArea(area);
+            menuController = loader.getController();
             menuController.setCanvas(canvas);
             menuController.setModel(model);
+
 
             primaryStage.show();
         } catch (IOException e) {
@@ -125,8 +136,6 @@ public class Main extends Application {
             /** Show the scene containing the root layout*/
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
-//            primaryStage.setHeight(GameSettings.SCREEN_SIZE);
-//            primaryStage.setWidth(GameSettings.SCREEN_SIZE);
             primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
@@ -141,6 +150,7 @@ public class Main extends Application {
             rootController.initModel(model);
             rootController.setArea(area);
             rootController.setCanvas(canvas);
+//            rootController.setMain(this);
 
             rootLayout.setOnMouseClicked(rootController.mouseClicked);
 
@@ -153,22 +163,9 @@ public class Main extends Application {
         }
     }
 
-    public static void overView() {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/overview.fxml"));
-            AnchorPane overview = (AnchorPane) loader.load();
-
-            Observer owController = loader.getController();
-            owController.setCanvas(canvas);
-            owController.setArea(area);
-
-            rootLayout.setCenter(overview);
-
-            owController.initModel(model);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void overView() {
+            observer = new Observer(menuController);
+            observer.listenToGames(model);
     }
 }
 

@@ -23,6 +23,7 @@ public class Controller implements Runnable {
     private Model model;
     private Area area;
     private Canvas canvas;
+    private Main main;
 
     public Controller() {
         isRunning = true;
@@ -32,6 +33,10 @@ public class Controller implements Runnable {
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
     }
 
     public void setCanvas(Canvas canvas) {
