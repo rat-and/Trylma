@@ -57,7 +57,11 @@ public class ServerCreator {
                 frame.setVisible(false);
                 frame.dispose();
 
-                if (cur_serv != null) cur_serv.close();
+                if (cur_serv != null) try {
+                    cur_serv.close();
+                } catch (ServerNotInitializedException e1) {
+                    //e1.printStackTrace(); Won`t happen
+                }
 
                 System.out.println("Printing all messages");
                 for (String s : log) {
@@ -94,7 +98,11 @@ public class ServerCreator {
                     }
                 } catch (Exception er2) {
                     sh.setState(ServerState.OFFLINE);
-                    cur_serv.close();
+                    try {
+                        cur_serv.close();
+                    } catch (ServerNotInitializedException e1) {
+                        //e1.printStackTrace(); Won`t happen
+                    }
                     cur_serv = null;
 
                     setLogMessage("ERROR2: " + er2.getMessage() + "\nProbably invalid port or/and ip");
@@ -116,6 +124,30 @@ public class ServerCreator {
     private void clear() {
         count = 0;
         connectedTextField.setText(Integer.toString(count));
+    }
+
+
+    public int getConnectedAmount() {
+        return count;
+    }
+
+    public ServerState getState() {
+        String text = statusTextField.getText();
+
+        switch (text) {
+            case "OFFLINE":
+                return ServerState.OFFLINE;
+
+            case "WAITING":
+                return ServerState.WAITING;
+
+            case "RUNNING":
+                return ServerState.RUNNING;
+
+            case "EXITED":
+                return ServerState.EXITED;
+        }
+        return null;
     }
 
     public void setState(ServerState ss) {

@@ -1,16 +1,7 @@
 package Other;
 
-import Protocols.Protocol;
-import Protocols.ServerProtocol;
-import Protocols.StandardServerProtocol;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import Logic.*;
 
@@ -37,17 +28,64 @@ public class Server extends Thread {
     private int players;
     private ServerSocket listener;
 
-    Server(ServerCreator handler) {
+    private boolean isOn;
+
+    public Server(ServerCreator handler) {
         sh = handler;
+        isOn = false;
+        players = 0;
     }
 
-    public ServerSocket getServerSocket() {
+    /**
+     * @throws ServerNotInitializedException if thread was not started
+     */
+    public boolean isClosed() throws ServerNotInitializedException {
+        if(!isOn)
+            throw new ServerNotInitializedException("Socket is not set, invoke start()");
+
+        return listener.isClosed();
+    }
+
+    public int getSocketsSize(){
+        return players;
+    }
+
+    final public String getSetIp(){
+        return ip;
+    }
+
+    /**
+     * @throws ServerNotInitializedException if thread was not started
+     */
+    public Game getRunningGame() throws ServerNotInitializedException {
+        if(!isOn)
+            throw new ServerNotInitializedException("Game is not set, invoke start()");
+        return game;
+    }
+
+    /**
+     * @throws ServerNotInitializedException if thread was not started
+     */
+    public ServerSocket getServerSocket() throws ServerNotInitializedException {
+        if(!isOn)
+            throw new ServerNotInitializedException("Socket is not set, invoke start()");
+
         return listener;
     }
 
-    public void close(){
+
+    /**
+     * @throws ServerNotInitializedException if thread was not started
+     */
+    public void close() throws ServerNotInitializedException {
+      if(!isOn)
+            throw new ServerNotInitializedException("Socket is not set, invoke start()");
+
+        sh.setState(ServerState.OFFLINE);
+
         if(listener == null)
             return;
+
         try {
             endGame();
 
@@ -58,9 +96,18 @@ public class Server extends Thread {
         }
     }
 
-    public void endGame(){
+    /**
+     * Forces game to stop
+     * @throws ServerNotInitializedException if thread was not started
+     */
+    public void endGame() throws ServerNotInitializedException {
+        if(!isOn)
+            throw new ServerNotInitializedException("Socket is not set, invoke start()");
+
         if(game != null) {
             game.stopGame();
+            sh.setState(ServerState.WAITING);
+            sh.setLogMessage("Game was stopped\n Set new game!",this);
         }
     }
 
@@ -79,7 +126,9 @@ public class Server extends Thread {
         this.players = players;
     }
 
+
     public void run() {
+        isOn = true;
         try {
             listener = new ServerSocket(port, 0, InetAddress.getByName(ip));
 
