@@ -57,6 +57,14 @@ public class Main extends Application {
         return client;
     }
 
+    public static void connectClient() {
+        try {
+            client.connectToServer("LOCALHOST",9007);//TODO: ADDRESS AND PORT OF SERVER
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public Canvas getCanvas() {
         return canvas;
@@ -76,7 +84,6 @@ public class Main extends Application {
 
 //        initRootLayout();
         initMenuLayout();
-        client.connectToServer("LOCALHOST",9009);//TODO: ADDRESS AND PORT OF SERVER
 //        overView();
 
 

@@ -3,13 +3,12 @@ package Controllers;
 import GUI.Area;
 import GUI.Main;
 import GUI.Model;
+import Other.ServerCreator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
-
 
 
 public class MenuOptionController {
@@ -39,16 +38,28 @@ public class MenuOptionController {
 
     @FXML
     protected void launchBoard(ActionEvent event) {
-        setNick(playerNick.getText());
-        Main.initRootLayout();
-        Main.overView();
-        Observer.drawNewBoard();
-        System.out.println(nick);
+        if (Model.isServerRunning()) {
+            setNick(playerNick.getText());
+            Main.connectClient();
+            Main.initRootLayout();
+            Main.overView();
+            Observer.drawNewBoard();
+            System.out.println(nick);
+        } else {
+            Model.popupWarning("Couldn't find a server running");
+        }
+    }
+
+    @FXML
+    protected void setUpServer() {
+        try {
+            ServerCreator.main(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setNick(String nick) {
         this.nick = nick;
     }
-
-
-}
+   }
