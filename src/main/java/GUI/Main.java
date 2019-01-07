@@ -19,18 +19,19 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private static Board board;
-    private static Area area;
+    private Board board;
+    private Area area;
 
-    public static Stage primaryStage;
+    public Stage primaryStage;
     private static BorderPane rootLayout;
     private AnchorPane menuLayout;
     private static Model model;
     private static Canvas canvas;
-    private static Client client;
+    private Client client;
     private MenuOptionController menuController;
     private Observer observer;
     private int portNumber;
+    private static Controller controller;
 
 //    public Main(int portNumber) {
 //        this.portNumber = portNumber;
@@ -48,6 +49,10 @@ public class Main extends Application {
         Main.canvas = canvas;
     }
 
+    public Area getArea(){
+        return area;
+    }
+
     public void newGame() {
         initBoard();
     }
@@ -57,37 +62,37 @@ public class Main extends Application {
     }
 
     private void initBoard() {
-        System.out.println("Setting up new board...");
+        //System.out.println("Setting up new board...");
         board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
     }
 
     private void initScreen() {
-        System.out.println("Setting up new play area...");
+        //System.out.println("Setting up new play area...");
         area = new Area(this);
     }
 
     private void initClient() {
-        System.out.println("Setting up new client...");
-        client = new Client();
+        //System.out.println("Setting up new client...");
+        client = new Client(this);
     }
 
     public void initAndConnectClient(int port) {
-        System.out.println("Setting up new client...");
-        client = new Client();
+        //System.out.println("Setting up new client...");
+        client = new Client(this);
         connectClient(port);
     }
 
-    public static Board getBoard() {
+    public Board getBoard() {
         return board;
     }
 
-    public static Client getClient() {
+    public Client getClient() {
         return client;
     }
 
-    public static void connectClient(int port) {
+    public void connectClient(int port) {
         try {
-            System.out.println("Connecting client to a port: " + port);
+            //System.out.println("Connecting client to a port: " + port);
             client.connectToServer("LOCALHOST",port);//TODO: ADDRESS AND PORT OF SERVER
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,8 +119,6 @@ public class Main extends Application {
         initRootLayout();
 //        initMenuLayout();
 //        overView();
-
-
     }
 
     public void initMenuLayout() {

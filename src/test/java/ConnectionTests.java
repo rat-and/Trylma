@@ -26,7 +26,7 @@ public class ConnectionTests {
 
         sc = new ServerCreator();
         server = new Server(sc);
-        client = new Client();
+        client = new Client(null);
 
         server.setNewGame(9007,"LOCALHOST",1);
         server.start();
@@ -45,7 +45,7 @@ public class ConnectionTests {
     @Test (expected = Exception.class)
     public void testWrongArgument() throws  Exception
     {
-        Client c = new Client();
+        Client c = new Client(null);
         c.connectToServer("LOCALHOST", 999999);
     }
 }

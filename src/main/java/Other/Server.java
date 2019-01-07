@@ -139,7 +139,7 @@ public class Server extends Thread {
                 game = new Game();
 
                 for (int i = 0; i < players; ++i) {
-                    Game.Player a = game.new Player(listener.accept(), 0, null);
+                    Game.Player a = game.new Player(listener.accept(), i, null);
                     game_players.add(a);
                     sh.increment();
                 }

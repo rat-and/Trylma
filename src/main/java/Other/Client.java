@@ -20,12 +20,21 @@ public class Client {
 
     private ClientProtocol protocol;
     private ServerListener listener;
+    private Main main;
 
-    public Client(){
-        //this.mainStage = mainStage;
+    private int index;
+    private static int counter = 0;
+
+    public Client(Main main){
+        this.main = main;
         //serverAddress = "192.168.1.13";
         //serverAddress = "LOCALHOST";
         //port = 9898;
+        index = counter++;
+    }
+
+    public int getIndex(){
+        return index;
     }
 
     public void connectToServer(String serverAddress, int port)throws Exception{
@@ -42,7 +51,6 @@ public class Client {
     }
 
     /**
-     * NA TEN MOMENT, polaczy sie z serwerem, dostanie od niego wiadomosc EXIT i skonczy dzialanie
     */
     public void receive(String str)throws Exception{
         switch (protocol.interpretServerMessage(str)){
@@ -57,9 +65,20 @@ public class Client {
                 prep = prep.substring(prep.indexOf(')') + 1);
                 HexCell<Piece> dst = new HexCell<Piece>(prep);
 
-                System.out.println(str);
+                System.out.println(src.toString() + "\t" + dst.toString());
 
-                Main.getBoard().move(src, dst);
+                System.out.println("INDEX: " + index + " UPDATE THIS CLIENT");
+
+                if (main.getBoard().moveFromString(src.toString(), dst.toString()) )
+                {
+                    System.out.println("INDEX: " + index + " SUCCESFUL MOVE");
+
+                }
+                else {
+                    System.out.println("INDEX: " + index + " UNSUCCESFUL MOVE");
+
+                }
+                //Main.getArea().reDraw();
                 break;
             case MESSAGE:
                 System.out.println(str);

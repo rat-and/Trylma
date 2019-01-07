@@ -26,6 +26,7 @@ class Game {
 
     public void createNewGame()
     {
+        System.out.println("NEW GAME WAS CREATED ON SERVER");
         board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
     }
 
@@ -68,9 +69,15 @@ class Game {
      * be occupied.  If the move is legal the game state is updated
      */
     public synchronized boolean legalMove(HexCell<Piece> src, HexCell<Piece> dst, Player player) {
-        if (player == currentPlayer ) {
+
+        for (Player p : players) {
+            if(p != player)
+                p.otherPlayerMoved(src, dst);
+        }
+        /*
+        //if (player == currentPlayer ) {
             if(board.move(src, dst)) {
-                /*
+
                 if(board.won() != -1)
                 {
                     for (Player p : players) {
@@ -78,7 +85,7 @@ class Game {
                             p.otherPlayerWon();
                     }
                 }
-                */
+
                 for (Player p : players) {
                     if(p != currentPlayer)
                         p.otherPlayerMoved(src, dst);
@@ -86,8 +93,10 @@ class Game {
                 currentPlayer = currentPlayer.next;
                 return true;
             }
-        }
+        //}
         return false;
+    */
+       return true;
     }
 
     /**
@@ -158,10 +167,13 @@ class Game {
             try {
                 // The thread is only started after everyone connects.
                 output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "All players connected"));
+                output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "you are number: " + Integer.toString(order) ));
+
 
                 // Tell the first player that it is her turn.
                 if (order == 0) {
                     output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "Your Move"));
+
                 }
 
                 // output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "End"));

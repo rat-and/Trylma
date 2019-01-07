@@ -73,7 +73,7 @@ public class Controller implements Runnable {
         public void handle(MouseEvent event) {
 //            area.updatePossibleMoves(null);
 
-            for (Point<HexCell<Piece>> p : Main.getBoard().getPoints()) {
+            for (Point<HexCell<Piece>> p : main.getBoard().getPoints()) {
 
                 /** If there's a player's piece at this position */
                 if (p.getKey().getKey() != null && area.isPlayer(p)) {
@@ -111,13 +111,13 @@ public class Controller implements Runnable {
                             /** Test for winner and run win sequence */
                             main.getClient().moveCommand(toMove.toString() + " " + p.getKey().toString());
                             if(main.getBoard().won() >= 0)
-                                area.runWinSequence(Main.getBoard().won());
+                                area.runWinSequence(main.getBoard().won());
                             /** Move to next player and run Computer Player */
                             area.nextPlayer();
                             while(area.getCurrentPlayerIndex() >= GameSettings.NUM_HUMAN_PLAYERS) {
                                 area.runComputerPlayer();
                                 if(main.getBoard().won() >= 0) {
-                                    area.runWinSequence(Main.getBoard().won());
+                                    area.runWinSequence(main.getBoard().won());
                                     break;
                                 }
                             }
