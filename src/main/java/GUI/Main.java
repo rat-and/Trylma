@@ -7,6 +7,7 @@ import Other.Client;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -26,12 +27,13 @@ public class Main extends Application {
     private static BorderPane rootLayout;
     private AnchorPane menuLayout;
     private static Model model;
-    private static Canvas canvas;
     private Client client;
     private MenuOptionController menuController;
     private Observer observer;
     private int portNumber;
     private static Controller controller;
+    private Canvas canvas;
+
 
 //    public Main(int portNumber) {
 //        this.portNumber = portNumber;
@@ -44,11 +46,11 @@ public class Main extends Application {
     public static void setModel(Model model) {
         Main.model = model;
     }
-
+/*
     public static void setCanvas(Canvas canvas) {
         Main.canvas = canvas;
     }
-
+*/
     public Area getArea(){
         return area;
     }
@@ -69,6 +71,10 @@ public class Main extends Application {
     private void initScreen() {
         //System.out.println("Setting up new play area...");
         area = new Area(this);
+    }
+
+    private void initCanvas() {
+        canvas = new Canvas();
     }
 
     private void initClient() {
@@ -111,7 +117,7 @@ public class Main extends Application {
         initBoard();
         /*uncomment when launch Main.class*/
 //        this.model = new Model();
-//        this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
+        this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Trylma");

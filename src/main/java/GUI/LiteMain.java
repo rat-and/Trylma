@@ -88,7 +88,7 @@ public class LiteMain extends Application {
             }
         });
         Main.setModel(model);
-        Main.setCanvas(canvas);
+        //Main.setCanvas(canvas);
     }
 
     public void overView() {
