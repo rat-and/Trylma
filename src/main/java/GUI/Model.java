@@ -53,7 +53,7 @@ public class Model {
 
     public static void addRunningPorts(int portNumber) {
         runningPorts.add(portNumber);
-        System.out.println("port no: " + portNumber + " added");
+        System.out.println("Port no: " + portNumber + " added to available ports");
     }
 
      public static void popupWarning(String warningMessage) {

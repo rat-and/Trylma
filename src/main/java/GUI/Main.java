@@ -30,6 +30,11 @@ public class Main extends Application {
     private static Client client;
     private MenuOptionController menuController;
     private Observer observer;
+    private int portNumber;
+
+//    public Main(int portNumber) {
+//        this.portNumber = portNumber;
+//    }
 
     public static void main(String[] args) {
         launch(args);
@@ -47,16 +52,29 @@ public class Main extends Application {
         initBoard();
     }
 
+    public void setPortNumber(int portNumber) {
+        this.portNumber = portNumber;
+    }
+
     private void initBoard() {
+        System.out.println("Setting up new board...");
         board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
     }
 
     private void initScreen() {
+        System.out.println("Setting up new play area...");
         area = new Area(this);
     }
 
     private void initClient() {
+        System.out.println("Setting up new client...");
         client = new Client();
+    }
+
+    public void initAndConnectClient(int port) {
+        System.out.println("Setting up new client...");
+        client = new Client();
+        connectClient(port);
     }
 
     public static Board getBoard() {
@@ -69,6 +87,7 @@ public class Main extends Application {
 
     public static void connectClient(int port) {
         try {
+            System.out.println("Connecting client to a port: " + port);
             client.connectToServer("LOCALHOST",port);//TODO: ADDRESS AND PORT OF SERVER
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,10 +101,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        initAndConnectClient(portNumber);
         initScreen();
         initBoard();
-        initClient();
-
         /*uncomment when launch Main.class*/
 //        this.model = new Model();
 //        this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
@@ -93,7 +111,7 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Trylma");
 
-//        initRootLayout();
+        initRootLayout();
 //        initMenuLayout();
 //        overView();
 
@@ -130,6 +148,7 @@ public class Main extends Application {
     /*when launch from Main.class change for static method*/
     public void initRootLayout() {
         try {
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/board.fxml"));
             rootLayout = (BorderPane) loader.load();

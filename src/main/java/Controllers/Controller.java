@@ -58,7 +58,7 @@ public class Controller implements Runnable {
     private void addPoint(MouseEvent event) {
         Point2D point2D = new Point2D(event.getX(), event.getY());
         model.getPoints().add(point2D);
-        System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
+//        System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
     }
 
     public EventHandler pointsAdder = new javafx.event.EventHandler<MouseEvent>() {
@@ -71,7 +71,6 @@ public class Controller implements Runnable {
     public EventHandler mouseClicked = new javafx.event.EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
 //            area.updatePossibleMoves(null);
 
             for (Point<HexCell<Piece>> p : Main.getBoard().getPoints()) {

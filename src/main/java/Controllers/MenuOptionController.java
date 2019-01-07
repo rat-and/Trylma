@@ -60,6 +60,9 @@ public class MenuOptionController {
                 public void run() {
                     try {
                         mainApp = new Main();
+                        mainApp.setPortNumber((int) availableGames.getValue());
+                        mainApp.setModel(model);
+                        mainApp.setCanvas(canvas);
                         mainApp.start(new Stage());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -68,13 +71,13 @@ public class MenuOptionController {
             });
 
             /*When launch from Main.class use static Main, mainApp otherwise */
-            mainApp.setModel(model);
-            mainApp.setCanvas(canvas);
-            mainApp.connectClient(getCurrentPort());
-            mainApp.initRootLayout();
+//            mainApp.setModel(model);
+//            mainApp.setCanvas(canvas);
+//            mainApp.initAndConnectClient(getCurrentPort());
+//            mainApp.initRootLayout();
 
             setNick(playerNick.getText());
-            System.out.println(nick);
+            System.out.println("New player: " + nick);
         } else {
             Model.popupWarning("Couldn't find a server running");
         }
