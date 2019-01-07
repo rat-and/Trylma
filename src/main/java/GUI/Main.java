@@ -26,12 +26,12 @@ public class Main extends Application {
     public Stage primaryStage;
     private static BorderPane rootLayout;
     private AnchorPane menuLayout;
-    private static Model model;
+    private Model model;
     private Client client;
     private MenuOptionController menuController;
     private Observer observer;
     private int portNumber;
-    private static Controller controller;
+    //private static Controller controller;
     private Canvas canvas;
 
 
@@ -43,9 +43,11 @@ public class Main extends Application {
         launch(args);
     }
 
+    /*
     public static void setModel(Model model) {
         Main.model = model;
     }
+    */
 /*
     public static void setCanvas(Canvas canvas) {
         Main.canvas = canvas;
@@ -116,7 +118,7 @@ public class Main extends Application {
         initScreen();
         initBoard();
         /*uncomment when launch Main.class*/
-//        this.model = new Model();
+        this.model = new Model();
         this.canvas = new Canvas(GameSettings.SCREEN_SIZE, GameSettings.SCREEN_SIZE);
 
         this.primaryStage = primaryStage;
@@ -176,6 +178,7 @@ public class Main extends Application {
 
             /** Give the controller access to the main app */
             Controller rootController = loader.getController();
+            rootController.setPrivilage(false);
             rootController.initModel(model);
             rootController.setArea(area);
             rootController.setCanvas(canvas);

@@ -25,14 +25,27 @@ public class Controller implements Runnable {
     private Canvas canvas;
     private Main main;
 
+    private boolean hasServerPrivilage;
+
     public Controller() {
         isRunning = true;
         runner = new Thread();
         runner.start();
+        hasServerPrivilage = false;
+    }
+
+    /**
+     *
+     * @param privilage Can make server like decisions if not sure just type false
+     */
+    public void setPrivilage(boolean privilage){
+        this.hasServerPrivilage = privilage;
     }
 
     public void setArea(Area area) {
         this.area = area;
+        //if(area != null && main.getClient() != null)
+        //   this.area.setCurrentPlayerIndex(main.getClient().getControlIndex());
     }
 
     public void setMain(Main main) {
@@ -72,6 +85,12 @@ public class Controller implements Runnable {
         @Override
         public void handle(MouseEvent event) {
 //            area.updatePossibleMoves(null);
+
+            if(!main.getClient().getValidTurn()){
+                //TODO: Some kind of message "NOT YOUR TURN etc..."
+                area.reDraw();
+                return;
+            }
 
             for (Point<HexCell<Piece>> p : main.getBoard().getPoints()) {
 
@@ -113,12 +132,14 @@ public class Controller implements Runnable {
                             if(main.getBoard().won() >= 0)
                                 area.runWinSequence(main.getBoard().won());
                             /** Move to next player and run Computer Player */
-                            area.nextPlayer();
-                            while(area.getCurrentPlayerIndex() >= GameSettings.NUM_HUMAN_PLAYERS) {
-                                area.runComputerPlayer();
-                                if(main.getBoard().won() >= 0) {
-                                    area.runWinSequence(main.getBoard().won());
-                                    break;
+                            if(hasServerPrivilage) {
+                                area.nextPlayer();
+                                while (area.getCurrentPlayerIndex() >= GameSettings.NUM_HUMAN_PLAYERS) {
+                                    area.runComputerPlayer();
+                                    if (main.getBoard().won() >= 0) {
+                                        area.runWinSequence(main.getBoard().won());
+                                        break;
+                                    }
                                 }
                             }
                         }

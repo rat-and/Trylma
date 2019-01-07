@@ -22,19 +22,25 @@ public class Client {
     private ServerListener listener;
     private Main main;
 
-    private int index;
-    private static int counter = 0;
+    private int controlIndex;
+    private boolean validTurn;
+
 
     public Client(Main main){
         this.main = main;
         //serverAddress = "192.168.1.13";
         //serverAddress = "LOCALHOST";
         //port = 9898;
-        index = counter++;
+        controlIndex = 0;
+        validTurn = false;
     }
 
-    public int getIndex(){
-        return index;
+    public int getControlIndex(){
+        return controlIndex;
+    }
+
+    public boolean getValidTurn(){
+        return  validTurn;
     }
 
     public void connectToServer(String serverAddress, int port)throws Exception{
@@ -59,6 +65,9 @@ public class Client {
                 System.out.println(str);
                 // TODO: Napis przywitania
                 break;
+            case YOUR_TURN:
+                this.validTurn = true;
+                break;
             case PLAYER_MOVED:
                 String prep = protocol.getPreparedMessage();
                 HexCell<Piece> src = new HexCell<Piece>(prep);
@@ -67,25 +76,36 @@ public class Client {
 
                 System.out.println(src.toString() + "\t" + dst.toString());
 
-                System.out.println("INDEX: " + index + " UPDATE THIS CLIENT");
+                //System.out.println("INDEX: " + index + " UPDATE THIS CLIENT");
 
                 if (main.getBoard().moveFromString(src.toString(), dst.toString()) )
                 {
-                    System.out.println("INDEX: " + index + " SUCCESFUL MOVE");
+                    //System.out.println("INDEX: " + index + " SUCCESFUL MOVE");
 
                 }
                 else {
-                    System.out.println("INDEX: " + index + " UNSUCCESFUL MOVE");
+                    //System.out.println("INDEX: " + index + " UNSUCCESFUL MOVE");
 
                 }
-                //Main.getArea().reDraw();
+                main.getArea().reDraw();
                 break;
+
             case MESSAGE:
                 System.out.println(str);
                 // TODO: Wiadomosc np. Twoja tura
                 break;
-                default:
+            case YOUR_INDEX:
+                String prep2 = protocol.getPreparedMessage();
+                int i = Integer.parseInt(prep2);
+                controlIndex = i;
+                main.getArea().setCurrentPlayerIndex(controlIndex);
+
+                System.out.println("You are player number: " + prep2);
+                break;
+
+            default:
                     break;
+
         }
         //if(str.contains("End")){
         //    System.out.println("END RECEIVED:" + str);
@@ -99,6 +119,7 @@ public class Client {
     }
 
     public void moveCommand(String str){
+        validTurn = false;
         out.println(protocol.createMessageToServer(Protocol.ClientToServerType.MOVE, str));
     }
 }

@@ -18,16 +18,24 @@ import java.util.ArrayList;
 class Game {
 
     private Board board;
+    private ServerBots bots;
 
     Game(){
         protocol = new StandardServerProtocol();
         players = new ArrayList<>();
+        bots = new ServerBots(this);
+        //gameOrder = 0;
+    }
+
+    public Board getBoard(){
+        return board;
     }
 
     public void createNewGame()
     {
         System.out.println("NEW GAME WAS CREATED ON SERVER");
         board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
+        //gameOrder = 0;
     }
 
     public void stopGame(){
@@ -57,9 +65,10 @@ class Game {
     /**
      * The current player.
      */
-    Player currentPlayer;
+    //Player currentPlayer;
     ArrayList<Player> players;
     ServerProtocol protocol;
+    //int gameOrder;
 
     /**
      * Called by the player threads when a player tries to make a
@@ -70,33 +79,42 @@ class Game {
      */
     public synchronized boolean legalMove(HexCell<Piece> src, HexCell<Piece> dst, Player player) {
 
-        for (Player p : players) {
-            if(p != player)
-                p.otherPlayerMoved(src, dst);
-        }
-        /*
-        //if (player == currentPlayer ) {
-            if(board.move(src, dst)) {
+        //for (Player p : players) {//     if(p != player)//        p.otherPlayerMoved(src, dst);//}
 
+        //if (player == currentPlayer ) {
+            if(board.moveFromString(src.toString(), dst.toString())) {
+
+                /*
                 if(board.won() != -1)
                 {
                     for (Player p : players) {
                         if(p != currentPlayer)
                             p.otherPlayerWon();
                     }
-                }
+                }*/
 
                 for (Player p : players) {
-                    if(p != currentPlayer)
+                    if(p != player)
                         p.otherPlayerMoved(src, dst);
                 }
-                currentPlayer = currentPlayer.next;
+
+                int or = player.order;
+                or++;
+                if(or >= players.size()){
+                    bots.setCurrentPlayerIndex(or);
+                    while(bots.getCurrentPlayerIndex() != 0) {
+                        bots.runComputerPlayer();
+                    }
+                    or = 0;
+                }
+
+                players.get(or).startTurn();
                 return true;
             }
-        //}
+
         return false;
-    */
-       return true;
+
+      // return true;
     }
 
     /**
@@ -106,7 +124,7 @@ class Game {
      * reader and a writer.
      */
     class Player extends Thread {
-        Player next;
+        //Player next;
         int order;
         Socket socket;
         BufferedReader input;
@@ -118,8 +136,7 @@ class Game {
          * initializes the stream fields, displays the first two
          * welcoming messages.
          */
-        public Player(Socket socket, int order, Player next) {
-            this.next = next;
+        public Player(Socket socket, int order) {
             this.socket = socket;
             this.order = order;
             try {
@@ -133,6 +150,10 @@ class Game {
                 System.out.println("Player died: " + e);
                 players.remove(this);
             }
+        }
+
+        public void startTurn(){
+            output.println(protocol.createMessageToClient(Protocol.ServerToClientType.YOUR_TURN,""));
         }
 
         /**
@@ -169,10 +190,12 @@ class Game {
                 output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "All players connected"));
                 output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "you are number: " + Integer.toString(order) ));
 
+                output.println(protocol.createMessageToClient(Protocol.ServerToClientType.YOUR_INDEX, Integer.toString(order)));
 
                 // Tell the first player that it is her turn.
                 if (order == 0) {
                     output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "Your Move"));
+                    output.println(protocol.createMessageToClient(Protocol.ServerToClientType.YOUR_TURN, ""));
 
                 }
 

@@ -87,7 +87,7 @@ public class LiteMain extends Application {
                 }
             }
         });
-        Main.setModel(model);
+        //Main.setModel(model);
         //Main.setCanvas(canvas);
     }
 

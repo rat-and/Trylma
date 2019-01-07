@@ -61,7 +61,7 @@ public class MenuOptionController {
                     try {
                         mainApp = new Main();
                         mainApp.setPortNumber((int) availableGames.getValue());
-                        mainApp.setModel(model);
+                        //mainApp.setModel(model);
                         //mainApp.setCanvas(canvas);
                         mainApp.start(new Stage());
                     } catch (Exception e) {

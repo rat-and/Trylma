@@ -3,6 +3,8 @@ package Other;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Random;
+
 import Logic.*;
 
 /**
@@ -27,6 +29,7 @@ public class Server extends Thread {
     private String ip;
     private int players;
     private ServerSocket listener;
+    private Random random;
 
     private boolean isOn;
 
@@ -34,6 +37,7 @@ public class Server extends Thread {
         sh = handler;
         isOn = false;
         players = 0;
+        random = new Random();
     }
 
     /**
@@ -135,21 +139,38 @@ public class Server extends Thread {
             sh.setLogMessage("Server is waiting for all players\n\t to join\n",this);
             try {
                 GameSettings.NUM_HUMAN_PLAYERS = players;
+                ArrayList<Game.Player> ordered_players = new ArrayList<>();
                 ArrayList<Game.Player> game_players = new ArrayList<>();
+                ArrayList<Integer>nums = new ArrayList<>();
+
                 game = new Game();
 
                 for (int i = 0; i < players; ++i) {
-                    Game.Player a = game.new Player(listener.accept(), i, null);
+                    int order = random.nextInt(players);
+                    while(nums.contains(order)){
+                        order = random.nextInt(players);
+                    }
+                    nums.add(order);
+
+                    Game.Player a = game.new Player(listener.accept(), order);
                     game_players.add(a);
                     sh.increment();
                 }
-                game.setPlayersArray(game_players);
-                game.createNewGame();
 
-                for (Game.Player p : game_players) {
-                    p.start();
+                for (int i = 0; i < players; ++i) {
+                    for (int j = 0; j < players; ++j) {
+                        if(game_players.get(j).order == i){
+                            ordered_players.add(game_players.get(j));
+                        }
+                    }
                 }
 
+                game.setPlayersArray(ordered_players);
+                game.createNewGame();
+
+                for (Game.Player p : ordered_players) {
+                    p.start();
+                }
 
                 sh.setLogMessage("Server is running",this);
                 sh.setState(ServerState.RUNNING);
