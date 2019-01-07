@@ -62,6 +62,12 @@ class Game {
         players = al;
     }
 
+    public void updatePlayers(HexCell<Piece> src, HexCell<Piece> dst){
+        for (Player p : players) {
+                p.otherPlayerMoved(src, dst);
+        }
+    }
+
     /**
      * The current player.
      */

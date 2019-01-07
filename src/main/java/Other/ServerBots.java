@@ -104,6 +104,7 @@ public class ServerBots {
 
         if(bestPiece != null && bestMove != null)
         game.getBoard().move(bestPiece.getKey(), bestMove.getKey());
+        game.updatePlayers(bestPiece.getKey(),bestMove.getKey());
         nextPlayer();
     }
 
@@ -136,13 +137,16 @@ public class ServerBots {
      */
     public double calculateScore(HexCell<Piece> src, HexCell<Piece> dst, HexCell<Piece> goal) {
         double score = 0;
-        game.getBoard().move(src, dst);
+        game.getBoard().move(src,dst);
+        game.updatePlayers(src,dst);
 
         for(Point<HexCell<Piece>> p : game.getBoard().getPlayerPoints(currentPlayerIndex)) {
             score += Math.pow(game.getBoard().getDistance(p.getKey(), goal), 2);
         }
 
-        game.getBoard().move(dst, src);
+        game.getBoard().move(dst,src);
+        game.updatePlayers(dst,src);
+
         return Math.sqrt(score);
     }
 }
