@@ -74,7 +74,7 @@ public class Client {
                 prep = prep.substring(prep.indexOf(')') + 1);
                 HexCell<Piece> dst = new HexCell<Piece>(prep);
 
-                System.out.println(src.toString() + "\t" + dst.toString());
+                System.out.println("client: " + src.toString() + "\t" + dst.toString());
 
                 //System.out.println("INDEX: " + index + " UPDATE THIS CLIENT");
 

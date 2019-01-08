@@ -42,6 +42,7 @@ public class Area extends Pane {
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
     }
+
     public void drawLatticing(GraphicsContext graphicsContext) {
         for (Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
             graphicsContext.setStroke(Color.BLACK);

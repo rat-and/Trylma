@@ -184,7 +184,7 @@ class Game {
          * We sent updated info from board to other clients
          */
         public void otherPlayerMoved(HexCell<Piece>src, HexCell<Piece> dst) {
-            output.println(protocol.createMessageToClient(Protocol.ServerToClientType.PLAYER_MOVED, src.toString() + dst.toString()));
+            output.println(protocol.createMessageToClient(Protocol.ServerToClientType.PLAYER_MOVED, src.toString() + " " + dst.toString()));
         }
 
         /**
