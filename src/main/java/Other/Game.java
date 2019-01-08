@@ -18,15 +18,24 @@ import java.util.ArrayList;
 class Game {
 
     private Board board;
+    private ServerBots bots;
 
     Game(){
         protocol = new StandardServerProtocol();
         players = new ArrayList<>();
+        bots = new ServerBots(this);
+        //gameOrder = 0;
+    }
+
+    public Board getBoard(){
+        return board;
     }
 
     public void createNewGame()
     {
+        System.out.println("NEW GAME WAS CREATED ON SERVER");
         board = new Board(GameSettings.BOARD_RADIUS, GameSettings.PLAYERS);
+        //gameOrder = 0;
     }
 
     public void stopGame(){
@@ -53,12 +62,19 @@ class Game {
         players = al;
     }
 
+    public void updatePlayers(HexCell<Piece> src, HexCell<Piece> dst){
+        for (Player p : players) {
+                p.otherPlayerMoved(src, dst);
+        }
+    }
+
     /**
      * The current player.
      */
-    Player currentPlayer;
+    //Player currentPlayer;
     ArrayList<Player> players;
     ServerProtocol protocol;
+    //int gameOrder;
 
     /**
      * Called by the player threads when a player tries to make a
@@ -68,8 +84,12 @@ class Game {
      * be occupied.  If the move is legal the game state is updated
      */
     public synchronized boolean legalMove(HexCell<Piece> src, HexCell<Piece> dst, Player player) {
-        if (player == currentPlayer ) {
-            if(board.move(src, dst)) {
+
+        //for (Player p : players) {//     if(p != player)//        p.otherPlayerMoved(src, dst);//}
+
+        //if (player == currentPlayer ) {
+            if(board.moveFromString(src.toString(), dst.toString())) {
+
                 /*
                 if(board.won() != -1)
                 {
@@ -77,17 +97,30 @@ class Game {
                         if(p != currentPlayer)
                             p.otherPlayerWon();
                     }
-                }
-                */
+                }*/
+
                 for (Player p : players) {
-                    if(p != currentPlayer)
+                    if(p != player)
                         p.otherPlayerMoved(src, dst);
                 }
-                currentPlayer = currentPlayer.next;
+
+                int or = player.order;
+                or++;
+                if(or >= players.size()){
+                    bots.setCurrentPlayerIndex(or);
+                    while(bots.getCurrentPlayerIndex() != 0) {
+                        bots.runComputerPlayer();
+                    }
+                    or = 0;
+                }
+
+                players.get(or).startTurn();
                 return true;
             }
-        }
+
         return false;
+
+      // return true;
     }
 
     /**
@@ -97,7 +130,7 @@ class Game {
      * reader and a writer.
      */
     class Player extends Thread {
-        Player next;
+        //Player next;
         int order;
         Socket socket;
         BufferedReader input;
@@ -109,8 +142,7 @@ class Game {
          * initializes the stream fields, displays the first two
          * welcoming messages.
          */
-        public Player(Socket socket, int order, Player next) {
-            this.next = next;
+        public Player(Socket socket, int order) {
             this.socket = socket;
             this.order = order;
             try {
@@ -124,6 +156,10 @@ class Game {
                 System.out.println("Player died: " + e);
                 players.remove(this);
             }
+        }
+
+        public void startTurn(){
+            output.println(protocol.createMessageToClient(Protocol.ServerToClientType.YOUR_TURN,""));
         }
 
         /**
@@ -148,7 +184,7 @@ class Game {
          * We sent updated info from board to other clients
          */
         public void otherPlayerMoved(HexCell<Piece>src, HexCell<Piece> dst) {
-            output.println(protocol.createMessageToClient(Protocol.ServerToClientType.PLAYER_MOVED, src.toString() + dst.toString()));
+            output.println(protocol.createMessageToClient(Protocol.ServerToClientType.PLAYER_MOVED, src.toString() + " " + dst.toString()));
         }
 
         /**
@@ -158,10 +194,15 @@ class Game {
             try {
                 // The thread is only started after everyone connects.
                 output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "All players connected"));
+                output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "you are number: " + Integer.toString(order) ));
+
+                output.println(protocol.createMessageToClient(Protocol.ServerToClientType.YOUR_INDEX, Integer.toString(order)));
 
                 // Tell the first player that it is her turn.
                 if (order == 0) {
                     output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "Your Move"));
+                    output.println(protocol.createMessageToClient(Protocol.ServerToClientType.YOUR_TURN, ""));
+
                 }
 
                 // output.println(protocol.createMessageToClient(Protocol.ServerToClientType.MESSAGE, "End"));

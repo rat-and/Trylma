@@ -1,5 +1,6 @@
 package Logic;
 
+import GUI.Main;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Board {
     private int radius;
     /** Win Locations */
     ArrayList<ArrayList<HexCell<Piece>>> winLocs;
+
 
     public Board(int radius, Color[] players) {
         if (radius < 2) throw new IllegalArgumentException();
@@ -153,8 +155,48 @@ public class Board {
         }
     }
 
+    public boolean moveFromString(String src, String dst) {
+        HexCell<Piece> a,b;
+
+        try {
+            int beg = 1;
+            int end = src.indexOf(',');
+            int x = Integer.parseInt(src.substring(beg, end));
+            beg = end + 1;
+            end = src.indexOf(',', beg);
+            int y = Integer.parseInt(src.substring(beg, end));
+            beg = end + 1;
+            end = src.indexOf(')', beg);
+            int z = Integer.parseInt(src.substring(beg, end));
+            a = getLatticeBoard().get(x, y, z);
+
+            beg = 1;
+            end = dst.indexOf(',');
+            x = Integer.parseInt(dst.substring(beg, end));
+            beg = end + 1;
+            end = dst.indexOf(',', beg);
+            y = Integer.parseInt(dst.substring(beg, end));
+            beg = end + 1;
+            end = dst.indexOf(')', beg);
+            z = Integer.parseInt(dst.substring(beg, end));
+            b = getLatticeBoard().get(x, y, z);
+
+
+            return this.move(a,b);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Zla konwersja!");
+        }
+
+        System.out.println("Couldn`t move despite server message");
+        return false;
+
+    }
+
     public boolean move(HexCell<Piece> src, HexCell<Piece> dst) {
+
         if(!isValidMove(src, dst)) return false;
+        //System.out.println("BOARD A MOVE WAS MADE FROM " + src + " TO: " + dst + "WITHING CLIENT: " + main.getClient().getIndex());
         latticeBoard.flipNodes(src, dst);
         return true;
     }

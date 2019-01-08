@@ -60,7 +60,7 @@
                 <configuration>
                     <classpathScope>test</classpathScope>
                     <!-- class name to execute -->
-                    <mainClass>GUI.Main</mainClass>
+                    <mainClass>GUI.LiteMain</mainClass>
                 </configuration>
                 <executions>
                     <execution>

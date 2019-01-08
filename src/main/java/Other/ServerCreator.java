@@ -90,6 +90,8 @@ public class ServerCreator {
                         cur_serv.setNewGame(port, ipTextField.getText(), count);
                         cur_serv.start();
 
+                        Model.addRunningPorts(port);
+
                     } catch (NumberFormatException nfe) {
                         sh.setState(ServerState.OFFLINE);
                         setLogMessage("INPUT1: " + nfe.getMessage() + "\nInvalid format of port[0000-49999]");

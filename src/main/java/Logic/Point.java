@@ -43,7 +43,6 @@ public class Point<K> {
         double ty = (y - getPyCord() - GameSettings.PIECE_DIAMETER / 2) / (GameSettings.PIECE_DIAMETER / 2);
 
         if (tx*tx + ty*ty <=1.0) {
-            System.out.println(Math.pow(px - x, 2) + Math.pow(py - y, 2) + "=?" + Math.pow(GameSettings.PIECE_DIAMETER, 2));
             return true;
         }
         else{

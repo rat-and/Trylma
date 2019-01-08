@@ -23,15 +23,33 @@ public class Controller implements Runnable {
     private Model model;
     private Area area;
     private Canvas canvas;
+    private Main main;
+
+    private boolean hasServerPrivilage;
 
     public Controller() {
         isRunning = true;
         runner = new Thread();
         runner.start();
+        hasServerPrivilage = false;
+    }
+
+    /**
+     *
+     * @param privilage Can make server like decisions if not sure just type false
+     */
+    public void setPrivilage(boolean privilage){
+        this.hasServerPrivilage = privilage;
     }
 
     public void setArea(Area area) {
         this.area = area;
+        //if(area != null && main.getClient() != null)
+        //   this.area.setCurrentPlayerIndex(main.getClient().getControlIndex());
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
     }
 
     public void setCanvas(Canvas canvas) {
@@ -53,7 +71,7 @@ public class Controller implements Runnable {
     private void addPoint(MouseEvent event) {
         Point2D point2D = new Point2D(event.getX(), event.getY());
         model.getPoints().add(point2D);
-        System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
+//        System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
     }
 
     public EventHandler pointsAdder = new javafx.event.EventHandler<MouseEvent>() {
@@ -66,10 +84,15 @@ public class Controller implements Runnable {
     public EventHandler mouseClicked = new javafx.event.EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            System.out.println("Point of coordinates: " + event.getX() + ", " + event.getY() + " added");
 //            area.updatePossibleMoves(null);
 
-            for (Point<HexCell<Piece>> p : Main.getBoard().getPoints()) {
+            if(!main.getClient().getValidTurn()){
+                //TODO: Some kind of message "NOT YOUR TURN etc..."
+                area.reDraw();
+                return;
+            }
+
+            for (Point<HexCell<Piece>> p : main.getBoard().getPoints()) {
 
                 /** If there's a player's piece at this position */
                 if (p.getKey().getKey() != null && area.isPlayer(p)) {
@@ -102,18 +125,21 @@ public class Controller implements Runnable {
                         System.out.println("Point within a piece - 3st if");
                         model.getPoints().add(new Point2D(event.getX(),  event.getY()));
 
-                        if(Main.getBoard().move(toMove, p.getKey())) {
+                        /*when lauch form Main.class use static reference Main.getClient... and so on*/
+                        if(main.getBoard().move(toMove, p.getKey())) {
                             /** Test for winner and run win sequence */
-                            Main.getClient().moveCommand(toMove.toString() + " " + p.getKey().toString());
-                            if(Main.getBoard().won() >= 0)
-                                area.runWinSequence(Main.getBoard().won());
+                            main.getClient().moveCommand(toMove.toString() + " " + p.getKey().toString());
+                            if(main.getBoard().won() >= 0)
+                                area.runWinSequence(main.getBoard().won());
                             /** Move to next player and run Computer Player */
-                            area.nextPlayer();
-                            while(area.getCurrentPlayerIndex() >= GameSettings.NUM_HUMAN_PLAYERS) {
-                                area.runComputerPlayer();
-                                if(Main.getBoard().won() >= 0) {
-                                    area.runWinSequence(Main.getBoard().won());
-                                    break;
+                            if(hasServerPrivilage) {
+                                area.nextPlayer();
+                                while (area.getCurrentPlayerIndex() >= GameSettings.NUM_HUMAN_PLAYERS) {
+                                    area.runComputerPlayer();
+                                    if (main.getBoard().won() >= 0) {
+                                        area.runWinSequence(main.getBoard().won());
+                                        break;
+                                    }
                                 }
                             }
                         }

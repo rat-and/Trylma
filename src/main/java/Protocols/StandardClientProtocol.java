@@ -31,6 +31,14 @@ public class StandardClientProtocol implements  ClientProtocol {
             this.message = message.substring(6);
             return Protocol.ServerToClientType.PLAYER_MOVED;
         }
+        else if(message.startsWith("YOUR_TURN")){
+            this.message = message;
+            return Protocol.ServerToClientType.YOUR_TURN;
+        }
+        else if(message.startsWith("YOUR_INDEX: ")){
+            this.message = message.substring(12);
+            return  Protocol.ServerToClientType.YOUR_INDEX;
+        }
         this.message = "Unkown message";
         return Protocol.ServerToClientType.MESSAGE;
     }

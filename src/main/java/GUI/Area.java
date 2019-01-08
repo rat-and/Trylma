@@ -42,6 +42,7 @@ public class Area extends Pane {
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
     }
+
     public void drawLatticing(GraphicsContext graphicsContext) {
         for (Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
             graphicsContext.setStroke(Color.BLACK);
@@ -125,8 +126,8 @@ public class Area extends Pane {
         if (src == null || src.getKey() == null) {
             return;
         }
-        for (Point<HexCell<Piece>> p : Main.getBoard().getPoints()) {
-            if (p.getKey() != null && Main.getBoard().isValidMove(src, p.getKey())) {
+        for (Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
+            if (p.getKey() != null && mainStage.getBoard().isValidMove(src, p.getKey())) {
                 possibleMoves.add(p);
             }
         }
@@ -138,7 +139,7 @@ public class Area extends Pane {
     }
 
     public void unhighlight() {
-        for(Point<HexCell<Piece>> p : Main.getBoard().getPoints()) {
+        for(Point<HexCell<Piece>> p : mainStage.getBoard().getPoints()) {
             if (p.getKey().getKey() != null) p.getKey().getKey().highlight(false);
             possibleMoves.clear();
         }
@@ -173,8 +174,8 @@ public class Area extends Pane {
             }
         }
 
-        if(bestPiece != null && bestMove != null)
-            mainStage.getBoard().move(bestPiece.getKey(), bestMove.getKey());
+        //if(bestPiece != null && bestMove != null)
+            //mainStage.getBoard().move(bestPiece.getKey(), bestMove.getKey());TODO:UNCOMMENT
         nextPlayer();
     }
 
@@ -207,13 +208,13 @@ public class Area extends Pane {
      */
     public double calculateScore(HexCell<Piece> src, HexCell<Piece> dst, HexCell<Piece> goal) {
         double score = 0;
-        mainStage.getBoard().move(src, dst);
+        //mainStage.getBoard().move(src, dst);TODO:UNCOMMENT
 
         for(Point<HexCell<Piece>> p : mainStage.getBoard().getPlayerPoints(currentPlayerIndex)) {
             score += Math.pow(mainStage.getBoard().getDistance(p.getKey(), goal), 2);
         }
 
-        mainStage.getBoard().move(dst, src);
+        //mainStage.getBoard().move(dst, src);TODO:UNCOMMENT
         return Math.sqrt(score);
     }
 

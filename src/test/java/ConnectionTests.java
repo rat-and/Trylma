@@ -31,7 +31,7 @@ public class ConnectionTests {
         sc = Mockito.mock(ServerCreator.class);
         //sc = new ServerCreator();
         server = new Server(sc);
-        client = new Client();
+        client = new Client(null);
 
         //when(sc.setLogMessage(Matchers.any(String.class),server))
 
@@ -52,7 +52,7 @@ public class ConnectionTests {
     @Test (expected = Exception.class)
     public void testWrongArgument() throws  Exception
     {
-        Client c = new Client();
+        Client c = new Client(null);
         c.connectToServer("LOCALHOST", 999999);
     }
 
